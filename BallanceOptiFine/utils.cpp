@@ -32,17 +32,22 @@ void GetMaterialTextureName(CKMaterial* mat, std::string* name) {
 
 	name->clear();
 
-	texture = mat->GetTexture(0);
+	texture = mat->GetTexture();
 	if (texture == NULL) return;
+	if (texture->GetSlotCount() < 1) return;
 	if (texture->GetSlotFileName(0) == NULL) return;
 
 	filepath = texture->GetSlotFileName(0);
 	*name = filepath.filename().string();
 }
 
-void ChangeMaterialTextureVideoFormat(CKMaterial* mat) {
+void ChangeMaterialTextureVideoFormat(CKMaterial* mat, CKRenderContext* renderctx) {
 	CKTexture* texture = NULL;
-	texture = mat->GetTexture(0);
+	texture = mat->GetTexture();
 	if (texture == NULL) return;
+	if (texture->GetSlotCount() < 1) return;
+	if (texture->GetSlotFileName(0) == NULL) return;
 	texture->SetDesiredVideoFormat(_32_ARGB8888);
+
+	texture->SystemToVideoMemory(renderctx);
 }

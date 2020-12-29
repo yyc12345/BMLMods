@@ -22,6 +22,10 @@ void BallanceOptiFine::OnLoad() {
 	m_enable_props[2]->SetComment("Enable transitional column.");
 	m_enable_props[2]->SetDefaultBoolean(true);
 
+	m_enable_props[3] = GetConfig()->GetProperty("OptiFine", "CK2_3DOverride");
+	m_enable_props[3]->SetComment("Override CK2_3D.ini TextureVideoFormat setting. Need restart game.");
+	m_enable_props[3]->SetDefaultBoolean(false);
+
 	// load shadow settings
 	GetConfig()->SetCategoryComment("Shadow", "BallanceOptiFine shadow settings");
 
@@ -60,6 +64,14 @@ void BallanceOptiFine::OnLoad() {
 	m_material_props[4]->SetComment("Process Stick_Bottom.tga");
 	m_material_props[4]->SetDefaultBoolean(true);
 
+
+	// CK_3D render config
+	if (m_enable_props[0]->GetBoolean() && m_enable_props[3]->GetBoolean()) {
+		VxImageDescEx imgs;
+		VxPixelFormat2ImageDesc(_32_ARGB8888, imgs);
+		m_bml->GetRenderManager()->SetDesiredTexturesVideoFormat(imgs);
+		//m_bml->GetRenderManager()->SetRenderOptions("TextureVideoFormat", _32_ARGB8888);
+	}
 }
 
 void BallanceOptiFine::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
@@ -98,15 +110,20 @@ void BallanceOptiFine::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING mast
 	// process material
 	if (m_enable_props[2]->GetBoolean()) {
 		// iterate loaded object
-		CKMaterial* material;
+		CKMaterial* material = NULL;
+		CKObject* obj = NULL;
 		CKContext* ctx = m_bml->GetCKContext();
+		CKRenderContext* renderctx = m_bml->GetRenderManager()->GetRenderContext(0);
 		std::string texture_name;
+
 		for (auto it = objArray->Begin(); it != objArray->End(); ++it) {
-			material = (CKMaterial*)ctx->GetObject(*it);
+			obj = ctx->GetObject(*it);
+			if (obj->GetClassID() != CKCID_MATERIAL) continue;
+			material = (CKMaterial*)obj;
 
 			GetMaterialTextureName(material, &texture_name);
 			if (texture_name.empty()) continue;
-
+			
 			// match data
 			if (texture_name == "Column_beige_fade.tga" && m_material_props[0]->GetBoolean()) {
 				material->EnableAlphaTest(FALSE);
@@ -118,7 +135,7 @@ void BallanceOptiFine::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING mast
 				material->EnableZWrite(TRUE);
 				material->SetZFunc(VXCMP_LESSEQUAL);
 
-				ChangeMaterialTextureVideoFormat(material);
+				ChangeMaterialTextureVideoFormat(material, renderctx);
 			} else if (texture_name == "Laterne_Schatten.tga" && m_material_props[1]->GetBoolean()) {
 				material->EnableAlphaTest(TRUE);
 				material->SetAlphaFunc(VXCMP_GREATER);
@@ -129,7 +146,7 @@ void BallanceOptiFine::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING mast
 				material->EnableZWrite(TRUE);
 				material->SetZFunc(VXCMP_LESSEQUAL);
 
-				ChangeMaterialTextureVideoFormat(material);
+				ChangeMaterialTextureVideoFormat(material, renderctx);
 			} else if (texture_name == "Laterne_Verlauf.tga" && m_material_props[2]->GetBoolean()) {
 				material->EnableAlphaTest(TRUE);
 				material->SetAlphaFunc(VXCMP_GREATER);
@@ -141,7 +158,7 @@ void BallanceOptiFine::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING mast
 				material->SetZFunc(VXCMP_LESSEQUAL);
 				material->SetTwoSided(TRUE);
 
-				ChangeMaterialTextureVideoFormat(material);
+				ChangeMaterialTextureVideoFormat(material, renderctx);
 			} else if (texture_name == "Modul18_Gitter.tga" && m_material_props[3]->GetBoolean()) {
 				material->EnableAlphaTest(TRUE);
 				material->SetAlphaFunc(VXCMP_GREATER);
@@ -152,7 +169,7 @@ void BallanceOptiFine::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING mast
 				material->EnableZWrite(TRUE);
 				material->SetZFunc(VXCMP_LESSEQUAL);
 
-				ChangeMaterialTextureVideoFormat(material);
+				ChangeMaterialTextureVideoFormat(material, renderctx);
 			} else if (texture_name == "Stick_Bottom.tga" && m_material_props[4]->GetBoolean()) {
 				material->EnableAlphaTest(FALSE);
 				material->SetAlphaFunc(VXCMP_GREATER);
@@ -163,8 +180,9 @@ void BallanceOptiFine::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING mast
 				material->EnableZWrite(TRUE);
 				material->SetZFunc(VXCMP_LESSEQUAL);
 
-				ChangeMaterialTextureVideoFormat(material);
+				ChangeMaterialTextureVideoFormat(material, renderctx);
 			}
 		}
 	}
 }
+
