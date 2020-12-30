@@ -20,7 +20,7 @@ void BallanceOptiFine::OnLoad() {
 
 	m_enable_props[2] = GetConfig()->GetProperty("OptiFine", "Material");
 	m_enable_props[2]->SetComment("Enable transitional column.");
-	m_enable_props[2]->SetDefaultBoolean(true);
+	m_enable_props[2]->SetDefaultBoolean(false);
 
 	m_enable_props[3] = GetConfig()->GetProperty("OptiFine", "CK2_3DOverride");
 	m_enable_props[3]->SetComment("Override CK2_3D.ini TextureVideoFormat setting. Need restart game.");
