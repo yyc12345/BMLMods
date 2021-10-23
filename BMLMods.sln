@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BallanceOptiFine", "Ballanc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FontCraft", "FontCraft\FontCraft.vcxproj", "{E289FDCD-C4BA-4770-9255-A7D1B1FBE617}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BaseCmoCfg", "BaseCmoCfg\BaseCmoCfg.vcxproj", "{1058C656-1B68-479A-97A2-3C0EEEA6480B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{E289FDCD-C4BA-4770-9255-A7D1B1FBE617}.Release|x64.Build.0 = Release|x64
 		{E289FDCD-C4BA-4770-9255-A7D1B1FBE617}.Release|x86.ActiveCfg = Release|Win32
 		{E289FDCD-C4BA-4770-9255-A7D1B1FBE617}.Release|x86.Build.0 = Release|Win32
+		{1058C656-1B68-479A-97A2-3C0EEEA6480B}.Debug|x64.ActiveCfg = Debug|x64
+		{1058C656-1B68-479A-97A2-3C0EEEA6480B}.Debug|x64.Build.0 = Debug|x64
+		{1058C656-1B68-479A-97A2-3C0EEEA6480B}.Debug|x86.ActiveCfg = Debug|Win32
+		{1058C656-1B68-479A-97A2-3C0EEEA6480B}.Debug|x86.Build.0 = Debug|Win32
+		{1058C656-1B68-479A-97A2-3C0EEEA6480B}.Release|x64.ActiveCfg = Release|x64
+		{1058C656-1B68-479A-97A2-3C0EEEA6480B}.Release|x64.Build.0 = Release|x64
+		{1058C656-1B68-479A-97A2-3C0EEEA6480B}.Release|x86.ActiveCfg = Release|Win32
+		{1058C656-1B68-479A-97A2-3C0EEEA6480B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
