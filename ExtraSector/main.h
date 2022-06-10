@@ -8,13 +8,14 @@ extern "C" {
 class ExtraSector : public IMod {
 public:
 	ExtraSector(IBML* bml) :
-		IMod(bml) {
+		IMod(bml),
+		detected_level(8) {
 	}
 
 	virtual CKSTRING GetID() override { return "ExtraSector"; }
 	virtual CKSTRING GetVersion() override { return BML_VERSION; }
 	virtual CKSTRING GetName() override { return "Extra Sector"; }
-	virtual CKSTRING GetAuthor() override { return "yyc12345, Gamepiaynmo, 2jjy"; }
+	virtual CKSTRING GetAuthor() override { return "2jjy, Gamepiaynmo, yyc12345"; }
 	virtual CKSTRING GetDescription() override { return "Yet Another 999 Sector Loader."; }
 	DECLARE_BML_VERSION;
 

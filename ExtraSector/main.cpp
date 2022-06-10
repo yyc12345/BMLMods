@@ -58,7 +58,7 @@ void ExtraSector::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterNam
 		StdstringPrintf(&sector_group_name, "Sector_%d", index);
 		sector_group = (CKGroup*)ctx->GetObjectByNameAndClass(sector_group_name.c_str(), CKCID_GROUP, NULL);
 		if (sector_group == NULL) {
-			GetLogger()->Error("Attribute modify ok. Exit with sector: %d", index - 1);
+			GetLogger()->Info("Attribute modify ok. Exit with sector: %d", index - 1);
 			detected_level = index - 1;
 			break;
 		}
