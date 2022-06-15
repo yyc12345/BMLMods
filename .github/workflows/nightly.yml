@@ -47,6 +47,6 @@ jobs:
     - name: Uploading Nightly Build
       uses: actions/upload-artifact@v3
       with:
-        name: ubuntu-20.04-deb-package
+        name: bmlmods-nightly
         path: bml_output/*.bmod
         retention-days: 30
