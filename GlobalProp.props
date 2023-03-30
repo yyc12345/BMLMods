@@ -5,7 +5,7 @@
   <PropertyGroup>
     <OutDir>$(YYCMOD_OUTPUT)</OutDir>
     <TargetExt>.bmod</TargetExt>
-    <TargetName>$(ProjectName)-$(Configuration)</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -17,7 +17,7 @@
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(BMLDEV_PATH)\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(BMLDEV_PATH)\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>BML.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <EnableUAC>false</EnableUAC>
