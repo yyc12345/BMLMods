@@ -1,13 +1,30 @@
 #include "main.h"
 
-IMod* BMLEntry(IBML* bml) {
-	return new FontCraft(bml);
+extern "C" {
+	__declspec(dllexport) IMod* BMLEntry(IBML* bml) {
+		return new FontCraft(bml);
+	}
 }
 
 // define bitmap font const
 #define HW_IMG 512
 #define HW_COUNT 16
 #define HW_CELL ((float)HW_IMG / (float)HW_COUNT)
+
+FontCraftSettings FontCraft::GetFontCraftSettings(std::nullptr_t blank) {
+	FontCraftSettings settings;
+	settings.mEnabled = m_core_props[0]->GetBoolean();
+	settings.mFontName = m_core_props[1]->GetString();
+	settings.mFontSize = m_core_props[2]->GetFloat();
+	settings.mIsItalic = m_core_props[3]->GetBoolean();
+	settings.mIsBold = m_core_props[4]->GetBoolean();
+	settings.mIsUnderLine = m_core_props[5]->GetBoolean();
+	return settings;
+}
+
+void FontCraft::TryGetFontCraftSettings(EventOnLoad_t::ListenerCallback callback) {
+	mEventOnLoad.ListenEvent(callback, std::nullptr_t());
+}
 
 void FontCraft::OnLoad() {
 	// load settings
@@ -36,6 +53,10 @@ void FontCraft::OnLoad() {
 	m_core_props[5] = GetConfig()->GetProperty("Core", "FontUnderLine");
 	m_core_props[5]->SetComment("Font underline?");
 	m_core_props[5]->SetDefaultBoolean(false);
+
+	// register handler
+	// because props had been loaded
+	mEventOnLoad.RegisterHandler(std::bind(&FontCraft::GetFontCraftSettings, this, std::placeholders::_1));
 
 	// gdi+
 	if (m_core_props[0]->GetBoolean()) {
@@ -121,6 +142,9 @@ void FontCraft::OnLoad() {
 }
 
 void FontCraft::OnUnload() {
+	// unregister event
+	mEventOnLoad.UnregisterHandler();
+
 	// gdi+
 	if (m_core_props[0]->GetBoolean()) {
 		delete bitmapFont;

@@ -1,23 +1,7 @@
 #include "main.h"
 #include <string>
 #include <stdexcept>
-
-void StdstringVPrintf(std::string* strl, const char* format, va_list argptr) {
-	int count = _vsnprintf(NULL, 0, format, argptr);
-	count++;
-
-	strl->resize(count);
-	(*strl)[count - 1] = '\0';
-	int write_result = _vsnprintf(strl->data(), count, format, argptr);
-
-	if (write_result < 0 || write_result >= count) throw new std::length_error("Invalid write_result in _vsnprintf.");
-}
-void StdstringPrintf(std::string* strl, const char* format, ...) {
-	va_list argptr;
-	va_start(argptr, format);
-	StdstringVPrintf(strl, format, argptr);
-	va_end(argptr);
-}
+#include <YYCHelper.h>
 
 IMod* BMLEntry(IBML* bml) {
 	return new ExtraSector(bml);
@@ -55,7 +39,7 @@ void ExtraSector::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterNam
 	detected_level = 8;
 	for (int index = 9; index < 9 + 1000; ++index) {
 		// get group
-		StdstringPrintf(&sector_group_name, "Sector_%d", index);
+		YYCHelper::StringHelper::StdstringPrintf(sector_group_name, "Sector_%d", index);
 		sector_group = (CKGroup*)ctx->GetObjectByNameAndClass(sector_group_name.c_str(), CKCID_GROUP, NULL);
 		if (sector_group == NULL) {
 			GetLogger()->Info("Attribute modify ok. Exit with sector: %d", index - 1);

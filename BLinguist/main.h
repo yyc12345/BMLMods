@@ -1,14 +1,20 @@
 #pragma once
 
 #include <BML/BMLAll.h>
+#include "../FontCraft/main.h"
 
-extern "C" {
-	__declspec(dllexport) IMod* BMLEntry(IBML* bml);
-}
+struct BLinguistSettings {
+	bool mEnabled;
+	std::string Langauge;
+
+	std::string FontName;
+	int FontSize;
+};
+
 class BLinguist : public IMod {
 public:
 	BLinguist(IBML* bml) :
-		IMod(bml) {
+		IMod(bml), mLaunchSettings() {
 	}
 
 	virtual CKSTRING GetID() override { return "BLinguist"; }
@@ -20,12 +26,16 @@ public:
 
 private:
 	virtual void OnLoad() override;
-	virtual void OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
-		CK_CLASSID filterClass, BOOL addtoscene, BOOL reuseMeshes, BOOL reuseMaterials,
-		BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) override;
-	virtual void OnPostLoadLevel() override;
+	//virtual void OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
+	//	CK_CLASSID filterClass, BOOL addtoscene, BOOL reuseMeshes, BOOL reuseMaterials,
+	//	BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) override;
+	//virtual void OnPostLoadLevel() override;
 
-	IProperty* m_core_props[2];
-	IProperty* m_font_props[2];
+	void GetFontCraftSettingsCallback(std::nullptr_t, FontCraftSettings settings);
+
+	IProperty* mCfgCore_Enabled, * mCfgCore_Language;
+	IProperty* mCfgFont_Name, * mCfgFont_Size, * mCfgFont_FontCraftSync;
+
+	BLinguistSettings mLaunchSettings;
 };
 

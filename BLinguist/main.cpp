@@ -19,32 +19,74 @@
 //	va_end(argptr);
 //}
 
-IMod* BMLEntry(IBML* bml) {
-	return new BLinguist(bml);
+extern "C" {
+	__declspec(dllexport) IMod* BMLEntry(IBML* bml) {
+		return new BLinguist(bml);
+	}
 }
 
 void BLinguist::OnLoad() {
 	// load settings
 	GetConfig()->SetCategoryComment("Core", "Core settings for BLinguist");
 
-	m_core_props[0] = GetConfig()->GetProperty("Core", "Enable");
-	m_core_props[0]->SetComment("Globally enable BLinguist");
-	m_core_props[0]->SetDefaultBoolean(false);
+	mCfgCore_Enabled = GetConfig()->GetProperty("Core", "Enable");
+	mCfgCore_Enabled->SetComment("Globally enable BLinguist");
+	mCfgCore_Enabled->SetDefaultBoolean(false);
 
-	m_core_props[1] = GetConfig()->GetProperty("Core", "Language");
-	m_core_props[1]->SetComment("Display Language");
-	m_core_props[1]->SetDefaultString("");
+	mCfgCore_Language = GetConfig()->GetProperty("Core", "Language");
+	mCfgCore_Language->SetComment("Display Language");
+	mCfgCore_Language->SetDefaultString("");
 
 	GetConfig()->SetCategoryComment("Font", "Font settings for BLinguist");
 
-	m_font_props[0] = GetConfig()->GetProperty("Font", "FontName");
-	m_font_props[0]->SetComment("Font name");
-	m_font_props[0]->SetDefaultString("Arial");
+	mCfgFont_Name = GetConfig()->GetProperty("Font", "FontName");
+	mCfgFont_Name->SetComment("Font name");
+	mCfgFont_Name->SetDefaultString("Arial");
 
-	m_font_props[1] = GetConfig()->GetProperty("Font", "FontSize");
-	m_font_props[1]->SetComment("Font size");
-	m_font_props[1]->SetDefaultInteger(10);
+	mCfgFont_Size = GetConfig()->GetProperty("Font", "FontSize");
+	mCfgFont_Size->SetComment("Font size");
+	mCfgFont_Size->SetDefaultInteger(10);
 
+	mCfgFont_FontCraftSync = GetConfig()->GetProperty("Font", "FontCraft");
+	mCfgFont_FontCraftSync->SetComment("Try getting settings from FontCraft.");
+	mCfgFont_FontCraftSync->SetDefaultBoolean(true);
+
+	// fill launch settings
+	mLaunchSettings.mEnabled = mCfgCore_Enabled->GetBoolean();
+	mLaunchSettings.Langauge = mCfgCore_Language->GetString();
+	mLaunchSettings.FontName = mCfgFont_Name->GetString();
+	mLaunchSettings.FontSize = mCfgFont_Size->GetInteger();
+
+	// try interacte with FontCraft
+	if (mCfgFont_FontCraftSync->GetBoolean()) {
+		bool failed = true;
+		int modcount = m_bml->GetModCount();
+		for (int i = 0; i < modcount; ++i) {
+			IMod* modinstance = m_bml->GetMod(i);
+			if (!YYCHelper::StringHelper::CKStringEqual(modinstance->GetID(), "FontCraft")) continue;
+			if (!YYCHelper::StringHelper::CKStringEqual(modinstance->GetVersion(), BML_VERSION)) continue;
+
+			// yes, this is font craft
+			FontCraft* fontcraft = dynamic_cast<FontCraft*>(modinstance);
+			if (fontcraft != nullptr) {
+				fontcraft->TryGetFontCraftSettings(std::bind(&BLinguist::GetFontCraftSettingsCallback, this, std::placeholders::_1, std::placeholders::_2));
+				failed = false;
+				break;
+			}
+		}
+
+		if (failed) {
+			GetLogger()->Warn("Fail to get FontCraft settings. Use self settings instead.");
+		}
+	}
+}
+
+void BLinguist::GetFontCraftSettingsCallback(std::nullptr_t t, FontCraftSettings settings) {
+	mLaunchSettings.FontName = settings.mFontName;
+	mLaunchSettings.FontSize = (int)settings.mFontSize;
+
+	GetLogger()->Info("Communicate with FontCraft success! Font name: \"%s\". Font size: %d", 
+		mLaunchSettings.FontName.c_str(), mLaunchSettings.FontSize);
 }
 
 //void ExtraSector::OnPreLoadLevel() {
