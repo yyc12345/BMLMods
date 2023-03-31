@@ -26,12 +26,15 @@ public:
 
 private:
 	virtual void OnLoad() override;
-	//virtual void OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
-	//	CK_CLASSID filterClass, BOOL addtoscene, BOOL reuseMeshes, BOOL reuseMaterials,
-	//	BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) override;
+	virtual void OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
+		CK_CLASSID filterClass, BOOL addtoscene, BOOL reuseMeshes, BOOL reuseMaterials,
+		BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) override;
+	virtual void OnLoadScript(CKSTRING filename, CKBehavior* script) override;
 	//virtual void OnPostLoadLevel() override;
 
 	void GetFontCraftSettingsCallback(std::nullptr_t, FontCraftSettings settings);
+	void CleanLanguagesNmo(CKDataArray* language);
+	void EditTutorialLoadingSkip(CKBehavior* script);
 
 	IProperty* mCfgCore_Enabled, * mCfgCore_Language;
 	IProperty* mCfgFont_Name, * mCfgFont_Size, * mCfgFont_FontCraftSync;
