@@ -127,7 +127,7 @@ void BLinguist::OnExitGame() {
 
 void BLinguist::GetFontCraftSettingsCallback(std::nullptr_t t, FontCraftSettings settings) {
 	mLaunchSettings.FontName = settings.mFontName;
-	mLaunchSettings.FontSize = (int)settings.mFontSize;
+	mLaunchSettings.FontSize = (int)(settings.mFontSize / 2.0f);
 
 	GetLogger()->Info("Communicate with FontCraft success! Font name: \"%s\". Font size: %d", 
 		mLaunchSettings.FontName.c_str(), mLaunchSettings.FontSize);

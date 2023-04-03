@@ -3,11 +3,52 @@
 
 namespace NSBLinguist::LabelManager {
 
+	BBTextDisplay::BBTextDisplay(CKContext* ctx) : ctx(ctx), tt(nullptr) {
+		tt = (CKSpriteText*)ctx->CreateObject(CKCID_SPRITETEXT, "TextDisplay Sprite", CK_OBJECTCREATION_NONAMECHECK);
+		tt->ModifyObjectFlags(CK_OBJECT_NOTTOBELISTEDANDSAVED, 0);
+		tt->EnableClipToCamera(FALSE);
+		tt->SetAlign(CKSPRITETEXT_ALIGNMENT(CKSPRITETEXT_HCENTER));
+
+		static const Vx2DVector sg_DefaultSpriteSize(320.0f, 32.0f);
+		tt->ReleaseAllSlots();
+		tt->Create((int)sg_DefaultSpriteSize.x, (int)sg_DefaultSpriteSize.y, 32);
+
+		// ARGB format
+		static const CKDWORD sg_TextColor = 0xFFFFFFFF;
+		tt->SetTextColor(sg_TextColor);
+
+		tt->SetZOrder(100);
+
+		ctx->GetCurrentLevel()->AddObject(tt);
+		//ctx->GetCurrentScene()->AddObjectToScene(tt);
+	}
+
+	BBTextDisplay::~BBTextDisplay() {
+		ctx->DestroyObject(tt);
+	}
+
+	void BBTextDisplay::SetVisible(bool is_visible) {
+		this->tt->Show(is_visible ? CKSHOW : CKHIDE);
+	}
+
+	void BBTextDisplay::SetText(CKSTRING strl) {
+		this->tt->SetText(strl);
+	}
+
+	void BBTextDisplay::SetFont(CKSTRING fontname, int fontsize) {
+		this->tt->SetFont(fontname, fontsize, 400, 0, 0);
+	}
+
+	void BBTextDisplay::SetPosition(const Vx2DVector& pos) {
+		this->tt->SetPosition(pos);
+	}
+
+
 	LabelUI::LabelUI(CKContext* ctx,
 		const std::string& watching, const std::string& text,
 		const std::string& fontname, const int fontsize) :
 
-		mOper("TextDisplay Sprite"), mCtx(ctx),
+		mOper(ctx), mCtx(ctx),
 		mWatchingEntity(nullptr) {
 
 		// get watching entity
@@ -18,28 +59,18 @@ namespace NSBLinguist::LabelManager {
 
 		// set label
 		mOper.SetVisible(false);
-		mOper.SetAlignment(CKSPRITETEXT_ALIGNMENT(CKSPRITETEXT_HCENTER));
-		mOper.SetFont(/*fontname.c_str()*/"Arial", fontsize, 400, false, false);
+		mOper.SetFont(fontname.c_str(), fontsize);
 
 		// set text
 		std::string native_str;
 		if (!YYCHelper::EncodingHelper::CharToChar(text, native_str, CP_UTF8, CP_ACP)) {
 			// fallback, use utf8 anywway
 			mOper.SetText(text.c_str());
+		} else {
+			// success.
+			mOper.SetText(native_str.c_str());
 		}
-		mOper.SetText(native_str.c_str());
-		mOper.SetText("caonima");
-
-		// hack BML to call set size
-		struct FakeBGuiText {
-			CKDWORD vtables;
-			CK2dEntity* m_2dentity;
-			CKSpriteText* m_sprite;
-		};
-		FakeBGuiText* ptr = reinterpret_cast<FakeBGuiText*>(&mOper);
-		ptr->m_sprite->ReleaseAllSlots();
-		ptr->m_sprite->Create(320, 32, 32);
-
+		
 	}
 
 	LabelUI::~LabelUI() {

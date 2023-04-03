@@ -6,6 +6,22 @@
 
 namespace NSBLinguist::LabelManager {
 
+	class BBTextDisplay {
+	public:
+		BBTextDisplay(CKContext* ctx);
+		BBTextDisplay(const BBTextDisplay&) = delete;
+		BBTextDisplay& operator=(const BBTextDisplay&) = delete;
+		~BBTextDisplay();
+
+		void SetVisible(bool is_visible);
+		void SetText(CKSTRING strl);
+		void SetFont(CKSTRING fontname, int fontsize);
+		void SetPosition(const Vx2DVector& pos);
+	private:
+		CKContext* ctx;
+		CKSpriteText* tt;
+	};
+
 	class LabelUI {
 	public:
 		LabelUI(CKContext* ctx,
@@ -17,9 +33,7 @@ namespace NSBLinguist::LabelManager {
 
 		void Process(void);
 	private:
-		void InitBGuiText(const std::string& text, const std::string& fontname, const int fontsize);
-
-		BGui::Text mOper;
+		BBTextDisplay mOper;
 		CKContext* mCtx;
 		CK2dEntity* mWatchingEntity;
 	};
