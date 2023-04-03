@@ -2,10 +2,13 @@
 
 #include <BML/BMLAll.h>
 #include "../FontCraft/main.h"
+#include "LangManager.h"
+#include "LabelManager.h"
 
 struct BLinguistSettings {
 	bool mEnabled;
-	std::string Langauge;
+	NSBLinguist::LangManager::UITrCollection mUITr;
+	NSBLinguist::LangManager::TutorialTrCollection mTutorialTr;
 
 	std::string FontName;
 	int FontSize;
@@ -14,7 +17,7 @@ struct BLinguistSettings {
 class BLinguist : public IMod {
 public:
 	BLinguist(IBML* bml) :
-		IMod(bml), mLaunchSettings() {
+		IMod(bml), mLaunchSettings(), mLabelsCollection(nullptr) {
 	}
 
 	virtual CKSTRING GetID() override { return "BLinguist"; }
@@ -30,15 +33,20 @@ private:
 		CK_CLASSID filterClass, BOOL addtoscene, BOOL reuseMeshes, BOOL reuseMaterials,
 		BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) override;
 	virtual void OnLoadScript(CKSTRING filename, CKBehavior* script) override;
+	virtual void OnProcess() override;
+	virtual void OnExitGame() override;
 	//virtual void OnPostLoadLevel() override;
 
 	void GetFontCraftSettingsCallback(std::nullptr_t, FontCraftSettings settings);
 	void CleanLanguagesNmo(CKDataArray* language);
 	void EditTutorialLoadingSkip(CKBehavior* script);
+	void CreateLabels(void);
+	void DestroyLabels(void);
 
 	IProperty* mCfgCore_Enabled, * mCfgCore_Language;
 	IProperty* mCfgFont_Name, * mCfgFont_Size, * mCfgFont_FontCraftSync;
 
+	NSBLinguist::LabelManager::LabelsCollection* mLabelsCollection;
 	BLinguistSettings mLaunchSettings;
 };
 

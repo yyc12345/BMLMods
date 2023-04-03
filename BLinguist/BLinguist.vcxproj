@@ -11,12 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LangLoader.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="LabelManager.cpp" />
+    <ClCompile Include="LangManager.cpp" />
+    <ClCompile Include="BLinguist.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LangLoader.h" />
-    <ClInclude Include="main.h" />
+    <ClInclude Include="DllMain.h" />
+    <ClInclude Include="LabelManager.h" />
+    <ClInclude Include="LangManager.h" />
+    <ClInclude Include="BLinguist.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Languages\ar.txt" />

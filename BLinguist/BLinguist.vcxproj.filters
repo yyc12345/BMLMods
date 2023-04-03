@@ -18,18 +18,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="BLinguist.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="LangLoader.cpp">
+    <ClCompile Include="LangManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DllMain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LabelManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h">
+    <ClInclude Include="BLinguist.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="LangLoader.h">
+    <ClInclude Include="LangManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DllMain.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LabelManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

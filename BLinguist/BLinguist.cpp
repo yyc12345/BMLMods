@@ -1,4 +1,4 @@
-#include "main.h"
+#include "BLinguist.h"
 #include <string>
 #include <stdexcept>
 
@@ -9,7 +9,7 @@ extern "C" {
 }
 
 void BLinguist::OnLoad() {
-	// load settings
+	// ========== load settings ==========
 	GetConfig()->SetCategoryComment("Core", "Core settings for BLinguist");
 
 	mCfgCore_Enabled = GetConfig()->GetProperty("Core", "Enable");
@@ -34,13 +34,36 @@ void BLinguist::OnLoad() {
 	mCfgFont_FontCraftSync->SetComment("Try getting settings from FontCraft.");
 	mCfgFont_FontCraftSync->SetDefaultBoolean(true);
 
-	// fill launch settings
+	// ========== try detecting user environment ==========
+	// only try it when language field is invalid (almost in first start)
+	NSBLinguist::LangManager::LangIdentifier lang_ident(mCfgCore_Language->GetString());
+	if (!NSBLinguist::LangManager::IsLegalLangIdentifier(lang_ident)) {
+		if (NSBLinguist::LangManager::DetectLanguages(lang_ident)) {
+			// success detect. enable plugin in default
+			mCfgCore_Enabled->SetBoolean(true);
+		} else {
+			// fail to detect. disable plugin in default
+			mCfgCore_Enabled->SetBoolean(false);
+		}
+
+		// always set language prop
+		mCfgCore_Language->SetString(lang_ident.c_str());
+	}
+
+	// ========== fill launch settings ==========
+	// load translation first
+	if (mCfgCore_Enabled->GetBoolean()) {
+		if (!NSBLinguist::LangManager::LoadTranslations(lang_ident, mLaunchSettings.mUITr, mLaunchSettings.mTutorialTr)) {
+			// something happend. fail to load. disable plugin anyway
+			mCfgCore_Enabled->SetBoolean(false);
+		}
+	}
+	// load other settings
 	mLaunchSettings.mEnabled = mCfgCore_Enabled->GetBoolean();
-	mLaunchSettings.Langauge = mCfgCore_Language->GetString();
 	mLaunchSettings.FontName = mCfgFont_Name->GetString();
 	mLaunchSettings.FontSize = mCfgFont_Size->GetInteger();
 
-	// try interacte with FontCraft
+	// ========== try interacte with FontCraft ==========
 	if (mCfgFont_FontCraftSync->GetBoolean()) {
 		bool failed = true;
 		int modcount = m_bml->GetModCount();
@@ -61,6 +84,7 @@ void BLinguist::OnLoad() {
 		if (failed) {
 			GetLogger()->Warn("Fail to get FontCraft settings. Use self settings instead.");
 		}
+
 	}
 }
 
@@ -77,6 +101,9 @@ void BLinguist::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
 		if (obj == nullptr || obj->GetClassID() != CKCID_DATAARRAY) return;
 
 		CleanLanguagesNmo((CKDataArray*)obj);
+	} else if (YYCHelper::StringHelper::CKStringEqual(filename, "3D Entities\\Gameplay.nmo")) {
+		// create labels once Gameplay.nmo has been loaded.
+		CreateLabels();
 	}
 
 }
@@ -87,6 +114,14 @@ void BLinguist::OnLoadScript(CKSTRING filename, CKBehavior* script) {
 		YYCHelper::StringHelper::CKStringEqual(script->GetName(), "Gameplay_Tutorial")) {
 		EditTutorialLoadingSkip(script);
 	}
+}
+
+void BLinguist::OnProcess() {
+	if (mLabelsCollection != nullptr) mLabelsCollection->Process();
+}
+
+void BLinguist::OnExitGame() {
+	DestroyLabels();
 }
 
 
@@ -132,4 +167,27 @@ void BLinguist::EditTutorialLoadingSkip(CKBehavior* script) {
 	ScriptHelper::CreateLink(bbLoadTutorialText, bbCreateString_CreateOut, bbLoadTutorialText->GetOutput(0), 0);
 
 	GetLogger()->Info("Edit Gameplay.nmo/Gameplay_Tutorial done.");
+}
+
+void BLinguist::CreateLabels(void) {
+	if (!mLaunchSettings.mEnabled) return;
+	if (mLabelsCollection != nullptr) return;
+
+	auto instance = new NSBLinguist::LabelManager::LabelsCollection(
+		m_bml->GetCKContext(),
+		mLaunchSettings.mUITr, mLaunchSettings.mTutorialTr,
+		mLaunchSettings.FontName, mLaunchSettings.FontSize
+	);
+	mLabelsCollection = instance;
+	GetLogger()->Info("Create Labels Collection done!");
+}
+
+void BLinguist::DestroyLabels(void) {
+	if (mLabelsCollection != nullptr) {
+		auto instance = mLabelsCollection;
+		mLabelsCollection = nullptr;
+		delete instance;
+
+		GetLogger()->Info("Dispose Labels Collection done!");
+	}
 }
