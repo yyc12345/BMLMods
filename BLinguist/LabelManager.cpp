@@ -44,6 +44,43 @@ namespace NSBLinguist::LabelManager {
 	}
 
 
+	OffsetCK2dEntity::OffsetCK2dEntity(CKContext* ctx,
+		const std::string& watching, const std::string& this_entity,
+		const Vx2DVector& pos, const Vx2DVector& size) :
+		mCtx(ctx), mWatching(nullptr), mCreated(nullptr) {
+		// create new entity
+		mCreated = (CK2dEntity*)mCtx->CreateObject(CKCID_2DENTITY, this_entity.c_str(), CK_OBJECTCREATION_NONAMECHECK);
+		ctx->GetCurrentLevel()->AddObject(mCreated);
+
+		// try getting ref entity
+		CKObject* obj = mCtx->GetObjectByNameAndClass(watching.c_str(), CKCID_2DENTITY, NULL);
+		if (obj != nullptr && obj->GetClassID() == CKCID_2DENTITY) {
+			mWatching = (CK2dEntity*)obj;
+		}
+		if (mWatching) {
+			mCreated->SetParent(mWatching);
+		}
+
+		// setup value
+		mCreated->SetHomogeneousCoordinates(TRUE);
+		mCreated->EnableClipToCamera(TRUE);
+		
+		mCreated->SetPosition(pos, TRUE);
+		mCreated->SetSize(size, TRUE);
+
+		mCreated->SetZOrder(-1000);
+
+	}
+	OffsetCK2dEntity::~OffsetCK2dEntity() {
+		mCtx->DestroyObject(mCreated);
+	}
+	void OffsetCK2dEntity::Process(void) {
+		if (mWatching != nullptr) {
+			mCreated->Show(mWatching->IsVisible() ? CKSHOW : CKHIDE);
+		}
+	}
+
+
 	LabelUI::LabelUI(CKContext* ctx,
 		const std::string& watching, const std::string& text,
 		const std::string& fontname, const int fontsize) :
@@ -70,7 +107,7 @@ namespace NSBLinguist::LabelManager {
 			// success.
 			mOper.SetText(native_str.c_str());
 		}
-		
+
 	}
 
 	LabelUI::~LabelUI() {
@@ -98,14 +135,28 @@ namespace NSBLinguist::LabelManager {
 		}
 	}
 
-
-
+	// Tuple: watching_entity, created_entity, pos.x, pox.y, size.x, size.y
+	static const std::vector<std::tuple<std::string, std::string, float, float, float, float>> g_OffsetCK2dEntities{
+		{"M_Opt_Gra_CloudsField", "M_Opt_Gra_CloudsField2", 0.2029f, 0.2025f, 0.7250f, 0.2405f},
+		{"M_Opt_Gra_ResField", "M_Opt_Gra_ResField2", 0.1780f, 0.1934f, 0.7579f, 0.3038f},
+		{"M_Opt_Graph_SynchField", "M_Opt_Graph_SynchField2", 0.1931f, 0.1760f, 0.7262f, 0.2785f},
+		{"M_Opt_Keys_Inv_Field", "M_Opt_Keys_Inv_Field2", 0.1591f, 0.1855f, 0.7716f, 0.3654f},
+		{"M_Opt_Sound_VolField", "M_Opt_Sound_VolField2", 0.1966f, 0.1837f, 0.7254f, 0.3430f}
+	};
 	LabelsCollection::LabelsCollection(CKContext* ctx,
 		const LangManager::UITrCollection& ui, const LangManager::TutorialTrCollection& tutorial,
 		const std::string& fontname, const int fontsize) :
 
-		mUIList(), mCtx(ctx),
+		mUIList(), mOffsetEntities(), mCtx(ctx),
 		mUICounter(0) {
+
+		// init offset 2d entities
+		for (const auto& item : g_OffsetCK2dEntities) {
+			this->mOffsetEntities.emplace_back(new OffsetCK2dEntity(
+				mCtx, std::get<0>(item), std::get<1>(item),
+				Vx2DVector(std::get<2>(item), std::get<3>(item)), Vx2DVector(std::get<4>(item), std::get<5>(item))
+			));
+		}
 
 		// init ui labels
 		for (const auto& item : ui) {
@@ -120,6 +171,12 @@ namespace NSBLinguist::LabelManager {
 			delete (item);
 		}
 		mUIList.clear();
+
+		for (const auto& item : mOffsetEntities) {
+			delete (item);
+		}
+		mOffsetEntities.clear();
+
 	}
 
 	void LabelsCollection::Process(void) {
@@ -128,6 +185,9 @@ namespace NSBLinguist::LabelManager {
 		if (mUICounter >= 6) {
 			mUICounter = 0;
 
+			for (auto& item : mOffsetEntities) {
+				item->Process();
+			}
 			for (auto& item : mUIList) {
 				item->Process();
 			}

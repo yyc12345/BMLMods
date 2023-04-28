@@ -22,6 +22,25 @@ namespace NSBLinguist::LabelManager {
 		CKSpriteText* tt;
 	};
 
+	class OffsetCK2dEntity
+	{
+	public:
+		OffsetCK2dEntity(CKContext* ctx, 
+			const std::string& watching, const std::string& this_entity,
+			const Vx2DVector& pos, const Vx2DVector& size
+		);
+		OffsetCK2dEntity(const OffsetCK2dEntity&) = delete;
+		OffsetCK2dEntity& operator=(const OffsetCK2dEntity&) = delete;
+		~OffsetCK2dEntity();
+
+		void Process(void);
+	private:
+		CKContext* mCtx;
+		CK2dEntity* mWatching;
+		CK2dEntity* mCreated;
+	};
+
+
 	class LabelUI {
 	public:
 		LabelUI(CKContext* ctx,
@@ -48,6 +67,7 @@ namespace NSBLinguist::LabelManager {
 
 		void Process(void);
 	private:
+		std::vector<OffsetCK2dEntity*> mOffsetEntities;
 		std::vector<LabelUI*> mUIList;
 		// mTutorialList;
 

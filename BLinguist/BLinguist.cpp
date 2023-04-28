@@ -32,7 +32,7 @@ void BLinguist::OnLoad() {
 
 	mCfgFont_FontCraftSync = GetConfig()->GetProperty("Font", "FontCraft");
 	mCfgFont_FontCraftSync->SetComment("Try getting settings from FontCraft.");
-	mCfgFont_FontCraftSync->SetDefaultBoolean(true);
+	mCfgFont_FontCraftSync->SetDefaultBoolean(false);
 
 	// ========== try detecting user environment ==========
 	// only try it when language field is invalid (almost in first start)
