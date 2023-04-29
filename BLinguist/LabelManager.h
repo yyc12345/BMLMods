@@ -13,10 +13,12 @@ namespace NSBLinguist::LabelManager {
 		BBTextDisplay& operator=(const BBTextDisplay&) = delete;
 		~BBTextDisplay();
 
+		void SetAlignment(CKSPRITETEXT_ALIGNMENT alignment);
 		void SetVisible(bool is_visible);
 		void SetText(const std::string& text);
 		void SetFont(CKSTRING fontname, int fontsize);
 		void SetPosition(const Vx2DVector& pos);
+		void SetSize(const Vx2DVector& size);
 	private:
 		CKContext* ctx;
 		CKSpriteText* tt;
@@ -82,15 +84,15 @@ namespace NSBLinguist::LabelManager {
 			const std::string& fontname, const int fontsize);
 		~LabelsCollection();
 
-		void SetTutorialIDRef(CKParameterLocal* plocal);
 		void Process(void);
 	private:
 		std::vector<OffsetCK2dEntity*> mOffsetEntities;
 		std::vector<LabelUI*> mUIList;
 		std::vector<LabelTutorial*> mTutorialList;
 
+		bool GetTutorialObjects(CKParameterLocal** ppindex, CK2dEntity** pTutInterface);
+
 		CKContext* mCtx;
-		CKParameterLocal* mTutIdRef;
 		int mUICounter;
 	};
 

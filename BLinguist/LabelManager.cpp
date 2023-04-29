@@ -9,11 +9,9 @@ namespace NSBLinguist::LabelManager {
 		tt = (CKSpriteText*)ctx->CreateObject(CKCID_SPRITETEXT, "TextDisplay Sprite", CK_OBJECTCREATION_NONAMECHECK);
 		tt->ModifyObjectFlags(CK_OBJECT_NOTTOBELISTEDANDSAVED, 0);
 		tt->EnableClipToCamera(FALSE);
-		tt->SetAlign(CKSPRITETEXT_ALIGNMENT(CKSPRITETEXT_HCENTER));
 
 		static const Vx2DVector sg_DefaultSpriteSize(320.0f, 32.0f);
-		tt->ReleaseAllSlots();
-		tt->Create((int)sg_DefaultSpriteSize.x, (int)sg_DefaultSpriteSize.y, 32);
+		this->SetSize(sg_DefaultSpriteSize);
 
 		// ARGB format
 		static const CKDWORD sg_TextColor = 0xFFFFFFFF;
@@ -27,6 +25,10 @@ namespace NSBLinguist::LabelManager {
 
 	BBTextDisplay::~BBTextDisplay() {
 		ctx->DestroyObject(tt);
+	}
+
+	void BBTextDisplay::SetAlignment(CKSPRITETEXT_ALIGNMENT alignment) {
+		this->tt->SetAlign(CKSPRITETEXT_ALIGNMENT(alignment));
 	}
 
 	void BBTextDisplay::SetVisible(bool is_visible) {
@@ -51,6 +53,11 @@ namespace NSBLinguist::LabelManager {
 
 	void BBTextDisplay::SetPosition(const Vx2DVector& pos) {
 		this->tt->SetPosition(pos);
+	}
+
+	void BBTextDisplay::SetSize(const Vx2DVector& size) {
+		this->tt->ReleaseAllSlots();
+		this->tt->Create((int)size.x, (int)size.y, 32);
 	}
 
 
@@ -105,7 +112,10 @@ namespace NSBLinguist::LabelManager {
 		}
 
 		// set label
+		static const Vx2DVector sg_LabelSize(/*320.0f*/640.0f, 64.0f);
 		mOper.SetVisible(false);
+		mOper.SetSize(sg_LabelSize);
+		mOper.SetAlignment(CKSPRITETEXT_ALIGNMENT(CKSPRITETEXT_HCENTER));
 		mOper.SetFont(fontname.c_str(), fontsize);
 		mOper.SetText(text);
 	}
@@ -121,7 +131,7 @@ namespace NSBLinguist::LabelManager {
 			mOper.SetVisible(false);
 		} else {
 			// update location
-			static const Vx2DVector offset(-160.0f, -7.5f);
+			static const Vx2DVector offset(/*-160.0f*/-320.0f, -7.5f);
 			Vx2DVector size, pos;
 			mWatchingEntity->GetSize(size);
 			mWatchingEntity->GetPosition(pos);
@@ -142,13 +152,17 @@ namespace NSBLinguist::LabelManager {
 
 		// split text by line
 		std::stringstream ss;
+		ss.write(reinterpret_cast<const char*>(text.c_str()), text.size());
 		while (true) {
 			std::string linetext;
 			if (!std::getline(ss, linetext, '\n')) break;
 
 			// create new line
+			static const Vx2DVector sg_LabelSize(1920.0f, 64.0f);
 			BBTextDisplay* newline = new BBTextDisplay(ctx);
 			newline->SetVisible(false);
+			newline->SetSize(sg_LabelSize);
+			newline->SetAlignment(CKSPRITETEXT_ALIGNMENT(CKSPRITETEXT_LEFT));
 			newline->SetFont(fontname.c_str(), fontsize);
 			newline->SetText(linetext);
 
@@ -177,7 +191,6 @@ namespace NSBLinguist::LabelManager {
 	}
 
 
-	static const std::string g_TutorialInterfaceName = "Tutorial_Interface";
 	// Tuple: watching_entity, created_entity, pos.x, pox.y, size.x, size.y
 	static const std::array<std::tuple<std::string, std::string, float, float, float, float>, 5u> g_OffsetCK2dEntities{
 		std::make_tuple("M_Opt_Gra_CloudsField", "M_Opt_Gra_CloudsField2", 0.2029f, 0.2025f, 0.7250f, 0.2405f),
@@ -263,7 +276,7 @@ namespace NSBLinguist::LabelManager {
 		const std::string& fontname, const int fontsize) :
 
 		mUIList(), mTutorialList(), mOffsetEntities(), mCtx(ctx),
-		mUICounter(0), mTutIdRef(nullptr) {
+		mUICounter(0) {
 
 		// init offset 2d entities
 		for (const auto& item : g_OffsetCK2dEntities) {
@@ -274,7 +287,7 @@ namespace NSBLinguist::LabelManager {
 		}
 
 		// init ui labels
-		for (int i = 0; i < ui.size(); ++i) {
+		for (size_t i = 0; i < ui.size(); ++i) {
 			this->mUIList.emplace_back(new LabelUI(mCtx, g_UIWatchingEntities[i], ui[i], fontname, fontsize));
 		}
 		// init tutorial labels
@@ -301,8 +314,25 @@ namespace NSBLinguist::LabelManager {
 
 	}
 
-	void LabelsCollection::SetTutorialIDRef(CKParameterLocal* plocal) {
-		mTutIdRef = plocal;
+	bool LabelsCollection::GetTutorialObjects(CKParameterLocal** ppindex, CK2dEntity** pTutInterface) {
+		// set to null first
+		*ppindex = nullptr;
+		*pTutInterface = nullptr;
+		CKObject* obj = nullptr;
+
+		// get interface
+		obj = mCtx->GetObjectByNameAndClass("Tutorial_Interface", CKCID_2DENTITY, NULL);
+		if (obj == nullptr || obj->GetClassID() != CKCID_2DENTITY) return false;
+		*pTutInterface = (CK2dEntity*)obj;
+
+		// get index first
+		obj = mCtx->GetObjectByNameAndClass("Tutorial ID", CKCID_PARAMETERLOCAL, NULL);
+		if (obj == nullptr || obj->GetClassID() != CKCID_PARAMETERLOCAL) return false;
+		CKParameterLocal* plocal = (CKParameterLocal*)obj;
+		if (plocal->GetGUID() != CKPGUID_INT || plocal->GetDataSize() != sizeof(int)) return false;
+		*ppindex = plocal;
+
+		return true;
 	}
 
 	void LabelsCollection::Process(void) {
@@ -318,17 +348,20 @@ namespace NSBLinguist::LabelManager {
 				item->Process();
 			}
 
-			CKObject* obj = mCtx->GetObjectByNameAndClass(g_TutorialInterfaceName.c_str(), CKCID_2DENTITY, NULL);
-			if (obj != nullptr && obj->GetClassID() == CKCID_2DENTITY) {
-				CK2dEntity* tut = (CK2dEntity*)obj;
-				Vx2DVector tutpos;
-				tut->GetPosition(tutpos);
-				int tutid = *(int*)mTutIdRef->GetReadDataPtr(FALSE);
+			CKParameterLocal* pIndex;
+			CK2dEntity* pTutInterface;
+			if (GetTutorialObjects(&pIndex, &pTutInterface)) {
+				bool showen = pTutInterface->IsVisible();
 
-				for (int i = 0; i < mTutorialList.size(); ++i) {
+				Vx2DVector tutpos;
+				pTutInterface->GetPosition(tutpos);
+
+				int tutid = *(int*)pIndex->GetReadDataPtr(FALSE);
+
+				for (size_t i = 0; i < mTutorialList.size(); ++i) {
 					LabelTutorial* item = mTutorialList[i];
 					item->Process(tutpos);
-					item->SetVisible(i == tutid);
+					item->SetVisible(showen && i == tutid);
 				}
 			} else {
 				for (auto& item : mTutorialList) {
