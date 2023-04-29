@@ -21,17 +21,17 @@ jobs:
     - name: Downloading BML Dev Package
       uses: robinraju/release-downloader@v1.3
       with:
-        repository: "Gamepiaynmo/BallanceModLoader"
+        repository: "yyc12345/BallanceModLoader"
         latest: false
-        tag: "0.3.40"
-        fileName: "BML-0.3.40-dev.zip"
+        tag: "0.3.42"
+        fileName: "BML-0.3.42-dev.zip"
         tarBall: false
         zipBall: false
         out-file-path: "bml_dev"
     - name: Decompressing BML Dev Package
       shell: powershell
       run: |
-        Expand-Archive -Path 'bml_dev\BML-0.3.40-dev.zip' -DestinationPath 'bml_dev'
+        Expand-Archive -Path 'bml_dev\BML-0.3.42-dev.zip' -DestinationPath 'bml_dev'
     - name: Generating props
       shell: cmd
       run: |

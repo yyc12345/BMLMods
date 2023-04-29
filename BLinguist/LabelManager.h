@@ -57,6 +57,7 @@ namespace NSBLinguist::LabelManager {
 		BBTextDisplay mOper;
 		CKContext* mCtx;
 		CK2dEntity* mWatchingEntity;
+		int mFontSize;
 	};
 
 	class LabelTutorial

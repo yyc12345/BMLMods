@@ -10,7 +10,8 @@ namespace NSBLinguist::LangManager {
 	static const std::vector<LangDetectPair> g_LangCodePageAssoc{
 		{"English", {437, }},
 		{"Chinese", {936, 20936 }},
-		{"Arabic", {1256 }},
+		{"Arabic", {720, 1256 }},
+		{"Japanese", {932 }},
 	};
 
 	/// <summary>
@@ -19,9 +20,10 @@ namespace NSBLinguist::LangManager {
 	/// </summary>
 	using LangLoadTuple = std::tuple<LangIdentifier, std::string, std::string>;
 	static const std::vector<LangLoadTuple> g_LangLoadSymbols{
-		{"English", "", "" },
+		{"English", "RCLANG_UI_EN", "RCLANG_TUTORIAL_EN" },
 		{"Chinese", "RCLANG_UI_ZH_CN", "RCLANG_TUTORIAL_ZH_CN"},
-		{"Arabic", "RCLANG_UI_AR", ""},
+		{"Arabic", "RCLANG_UI_AR", "RCLANG_TUTORIAL_AR"},
+		{"Japanese", "RCLANG_UI_JA", "RCLANG_TUTORIAL_JA"},
 	};
 
 	static bool GetLangLoadSymbols(LangIdentifier& ident, std::string& out_ui, std::string& out_tutorial) {

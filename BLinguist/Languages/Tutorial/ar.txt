@@ -1,0 +1,54 @@
+Game Tutorial:
+You may halt or quit the game any time using the "ESC" key.
+You may continue the game tutorial with the "RETURN" key 
+or quit the tutorial by pressing "Q".
+*View Rotation: 
+Keep the left "SHIFT" key pressed and use the "LEFT" 
+or "RIGHT" ARROW key to rotate the view in 90° steps.
+
+Continue with "RETURN" ...
+*Overview:
+Hold down the "SPACEBAR" to raise the viewpoint.
+
+Continue with "RETURN" ...
+*Navigation:
+Turn the view until the track with the two towers is in front of you.
+Use the "ARROW" keys (without "SHIFT") to move the ball 
+forward, backward, left and right.
+Follow the path!
+*Life Extra:
+If you fall off the track, you lose one life. 
+Your remaining lifes are displayed at the right bottom of the screen. 
+You receive an additional life by picking up a "Life Extra".
+
+Continue with "RETURN"  ...
+*Transformer:
+With the use of "transformers" you can change the material of the ball. 
+The material of the transformer field indicates the type of transformer. 
+This is a stone transformer.
+
+Continue with "RETURN" ... 
+*This slope is too steep for a stoneball!
+Look for a wood transformer and try again. 
+Hint: Turn the view (SHIFT + RIGHT/LEFT), to get a better orientation. 
+Rolling backwards can be dangerous!
+
+Continue with "RETURN" ...
+*Point Extra:
+The display on the left shows your actual time-points, 
+which are constantly decreasing during the game. 
+You increase your score by picking up a Point Extra.
+
+Continue with "RETURN"  ...
+*Checkpoints:
+This is the first checkpoint you have to pass.
+In case you loose a life during the game, you can continue 
+the game from the last checkpoint.
+
+Continue with "RETURN"  ...
+*Some hints at the end:
+In case you get stuck at some point or need some technical help, 
+please take a look at the "Ballance HTML Help", which is accessible 
+via the Windows Start Menu (not during the game!).
+
+Quit the tutorial with "RETURN" ...

@@ -103,7 +103,7 @@ namespace NSBLinguist::LabelManager {
 		const std::string& fontname, const int fontsize) :
 
 		mOper(ctx), mCtx(ctx),
-		mWatchingEntity(nullptr) {
+		mWatchingEntity(nullptr), mFontSize(fontsize) {
 
 		// get watching entity
 		CKObject* obj = mCtx->GetObjectByNameAndClass(watching.c_str(), CKCID_2DENTITY, NULL);
@@ -131,7 +131,7 @@ namespace NSBLinguist::LabelManager {
 			mOper.SetVisible(false);
 		} else {
 			// update location
-			static const Vx2DVector offset(/*-160.0f*/-320.0f, -7.5f);
+			Vx2DVector offset(/*-160.0f*/-320.0f, - mFontSize * (7.5f / 10.0f));
 			Vx2DVector size, pos;
 			mWatchingEntity->GetSize(size);
 			mWatchingEntity->GetPosition(pos);
@@ -184,7 +184,7 @@ namespace NSBLinguist::LabelManager {
 	void LabelTutorial::Process(const Vx2DVector& tut_pos) {
 		int line = 0;
 		for (const auto& item : mLines) {
-			Vx2DVector relativePos(0.0f, line * mFontSize * (25.0f / 10.0f) + 7.5f);
+			Vx2DVector relativePos(0.0f, line * mFontSize * (/*25.0f*/20.0f / 10.0f) + 7.5f);
 			item->SetPosition(relativePos + tut_pos);
 			++line;
 		}
@@ -192,14 +192,22 @@ namespace NSBLinguist::LabelManager {
 
 
 	// Tuple: watching_entity, created_entity, pos.x, pox.y, size.x, size.y
-	static const std::array<std::tuple<std::string, std::string, float, float, float, float>, 5u> g_OffsetCK2dEntities{
+	static const std::array<std::tuple<std::string, std::string, float, float, float, float>, 13u> g_OffsetCK2dEntities{
 		std::make_tuple("M_Opt_Gra_CloudsField", "M_Opt_Gra_CloudsField2", 0.2029f, 0.2025f, 0.7250f, 0.2405f),
 		std::make_tuple("M_Opt_Gra_ResField", "M_Opt_Gra_ResField2", 0.1780f, 0.1934f, 0.7579f, 0.3038f),
 		std::make_tuple("M_Opt_Graph_SynchField", "M_Opt_Graph_SynchField2", 0.1931f, 0.1760f, 0.7262f, 0.2785f),
 		std::make_tuple("M_Opt_Keys_Inv_Field", "M_Opt_Keys_Inv_Field2", 0.1591f, 0.1855f, 0.7716f, 0.3654f),
-		std::make_tuple("M_Opt_Sound_VolField", "M_Opt_Sound_VolField2", 0.1966f, 0.1837f, 0.7254f, 0.3430f)
+		std::make_tuple("M_Opt_Sound_VolField", "M_Opt_Sound_VolField2", 0.1966f, 0.1837f, 0.7254f, 0.3430f),
+		std::make_tuple("M_Opt_Keys_Key1", "M_Opt_Keys_Key1_2", -1.0f, 0.0f, 1.0f, 1.0f),
+		std::make_tuple("M_Opt_Keys_Key2", "M_Opt_Keys_Key2_2", -1.0f, 0.0f, 1.0f, 1.0f),
+		std::make_tuple("M_Opt_Keys_Key3", "M_Opt_Keys_Key3_2", -1.0f, 0.0f, 1.0f, 1.0f),
+		std::make_tuple("M_Opt_Keys_Key4", "M_Opt_Keys_Key4_2", -1.0f, 0.0f, 1.0f, 1.0f),
+		std::make_tuple("M_Opt_Keys_Key5", "M_Opt_Keys_Key5_2", -1.0f, 0.0f, 1.0f, 1.0f),
+		std::make_tuple("M_Opt_Keys_Key6", "M_Opt_Keys_Key6_2", -1.0f, 0.0f, 1.0f, 1.0f),
+		std::make_tuple("M_Highscore_Title", "M_Highscore_Title_LeftPart", 0.0f, 0.0f, 0.5f, 1.0f),
+		std::make_tuple("M_Highscore_Title", "M_Highscore_Title_RightPart", 0.5f, 0.0f, 0.5f, 1.0f),
 	};
-	static const std::array<std::string, 70u> g_UIWatchingEntities{
+	static const std::array<std::string, 71u> g_UIWatchingEntities{
 		"M_Main_But_5",
 		"M_Main_But_4",
 		"M_Main_But_3",
@@ -236,7 +244,8 @@ namespace NSBLinguist::LabelManager {
 		"M_Options_But_Back",
 		"M_HighEntry_But_1",
 		"M_HighEntry_Title",
-		"M_Highscore_Title",
+		"M_Highscore_Title_LeftPart",
+		"M_Highscore_Title_RightPart",
 		"M_Options_But_1",
 		"M_Options_But_2",
 		"M_Options_But_3",
@@ -255,12 +264,12 @@ namespace NSBLinguist::LabelManager {
 		"M_Opt_Keys_Inv_No",
 		"M_Opt_Keys_Inv_Field2",
 		"M_Opt_Keys_But_Back",
-		"M_Opt_Keys_Key6",
-		"M_Opt_Keys_Key4",
-		"M_Opt_Keys_Key3",
-		"M_Opt_Keys_Key2",
-		"M_Opt_Keys_Key1",
-		"M_Opt_Keys_Key5",
+		"M_Opt_Keys_Key6_2",
+		"M_Opt_Keys_Key4_2",
+		"M_Opt_Keys_Key3_2",
+		"M_Opt_Keys_Key2_2",
+		"M_Opt_Keys_Key1_2",
+		"M_Opt_Keys_Key5_2",
 		"M_Opt_Sound_Title",
 		"M_Opt_Sound_But_Back",
 		"M_Opt_Sound_VolField2",
