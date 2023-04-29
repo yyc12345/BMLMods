@@ -14,7 +14,7 @@ namespace NSBLinguist::LabelManager {
 		~BBTextDisplay();
 
 		void SetVisible(bool is_visible);
-		void SetText(CKSTRING strl);
+		void SetText(const std::string& text);
 		void SetFont(CKSTRING fontname, int fontsize);
 		void SetPosition(const Vx2DVector& pos);
 	private:
@@ -57,6 +57,23 @@ namespace NSBLinguist::LabelManager {
 		CK2dEntity* mWatchingEntity;
 	};
 
+	class LabelTutorial
+	{
+	public:
+		LabelTutorial(CKContext* ctx, const std::string& text,
+			const std::string& fontname, const int fontsize);
+		LabelTutorial(const LabelTutorial&) = delete;
+		LabelTutorial& operator=(const LabelTutorial&) = delete;
+		~LabelTutorial();
+
+		void SetVisible(bool is_visible);
+		void Process(const Vx2DVector& tut_pos);
+	private:
+		std::vector<BBTextDisplay*> mLines;
+		CKContext* mCtx;
+		int mFontSize;
+	};
+
 
 	class LabelsCollection {
 	public:
@@ -65,13 +82,15 @@ namespace NSBLinguist::LabelManager {
 			const std::string& fontname, const int fontsize);
 		~LabelsCollection();
 
+		void SetTutorialIDRef(CKParameterLocal* plocal);
 		void Process(void);
 	private:
 		std::vector<OffsetCK2dEntity*> mOffsetEntities;
 		std::vector<LabelUI*> mUIList;
-		// mTutorialList;
+		std::vector<LabelTutorial*> mTutorialList;
 
 		CKContext* mCtx;
+		CKParameterLocal* mTutIdRef;
 		int mUICounter;
 	};
 

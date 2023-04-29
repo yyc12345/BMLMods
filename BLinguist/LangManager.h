@@ -7,8 +7,7 @@
 namespace NSBLinguist::LangManager {
 
 	using LangIdentifier = std::string;
-	using UITrPair = std::pair<std::string, std::string>;
-	using UITrCollection = std::vector<UITrPair>;
+	using UITrCollection = std::array<std::string, 70u>;
 	using TutorialTrCollection = std::array<std::string, 10u>;
 
 	bool IsLegalLangIdentifier(LangIdentifier& ident);
