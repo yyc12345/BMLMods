@@ -28,11 +28,11 @@ void BLinguist::OnLoad() {
 
 	mCfgFont_Size = GetConfig()->GetProperty("Font", "FontSize");
 	mCfgFont_Size->SetComment("Font size");
-	mCfgFont_Size->SetDefaultInteger(10);
+	mCfgFont_Size->SetDefaultInteger(12);
 
 	mCfgFont_FontCraftSync = GetConfig()->GetProperty("Font", "FontCraft");
 	mCfgFont_FontCraftSync->SetComment("Try getting settings from FontCraft.");
-	mCfgFont_FontCraftSync->SetDefaultBoolean(false);
+	mCfgFont_FontCraftSync->SetDefaultBoolean(true);
 
 	// ========== try detecting user environment ==========
 	// only try it when language field is invalid (almost in first start)
@@ -44,6 +44,7 @@ void BLinguist::OnLoad() {
 		} else {
 			// fail to detect. disable plugin in default
 			mCfgCore_Enabled->SetBoolean(false);
+			GetLogger()->Warn("Fail to detect language. Plugin is disabled now.");
 		}
 
 		// always set language prop
@@ -56,6 +57,7 @@ void BLinguist::OnLoad() {
 		if (!NSBLinguist::LangManager::LoadTranslations(lang_ident, mLaunchSettings.mUITr, mLaunchSettings.mTutorialTr)) {
 			// something happend. fail to load. disable plugin anyway
 			mCfgCore_Enabled->SetBoolean(false);
+			GetLogger()->Warn("Fail to load translations. Plugin is disabled now.");
 		}
 	}
 	// load other settings
@@ -92,6 +94,8 @@ void BLinguist::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
 	CK_CLASSID filterClass, BOOL addtoscene, BOOL reuseMeshes, BOOL reuseMaterials, 
 	BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) {
 
+	// do not process if disabled
+	if (!mLaunchSettings.mEnabled) return;
 	// do not process map
 	if (isMap) return;
 
@@ -109,6 +113,9 @@ void BLinguist::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
 }
 
 void BLinguist::OnLoadScript(CKSTRING filename, CKBehavior* script) {
+	// do not process if disabled
+	if (!mLaunchSettings.mEnabled) return;
+
 	// process Gameplay.nmo
 	if (YYCHelper::StringHelper::CKStringEqual(filename, "3D Entities\\Gameplay.nmo") &&
 		YYCHelper::StringHelper::CKStringEqual(script->GetName(), "Gameplay_Tutorial")) {

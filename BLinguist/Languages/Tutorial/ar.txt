@@ -1,54 +1,54 @@
-Game Tutorial:
-You may halt or quit the game any time using the "ESC" key.
-You may continue the game tutorial with the "RETURN" key 
-or quit the tutorial by pressing "Q".
-*View Rotation: 
-Keep the left "SHIFT" key pressed and use the "LEFT" 
-or "RIGHT" ARROW key to rotate the view in 90° steps.
+برنامج تعليمي للعبة:
+يمكنك إيقاف أو إنهاء اللعبة في أي وقت باستخدام مفتاح "ESC".
+يمكنك متابعة البرنامج التعليمي للعبة باستخدام مفتاح "RETURN"
+أو قم بإنهاء البرنامج التعليمي بالضغط على "Q".
+* عرض الدوران:
+استمر في الضغط على مفتاح "SHIFT" الأيسر واستخدم الزر "LEFT"
+أو مفتاح "RIGHT" ARROW لتدوير العرض بخطوات 90 درجة.
 
-Continue with "RETURN" ...
-*Overview:
-Hold down the "SPACEBAR" to raise the viewpoint.
+تواصل مع "RETURN" ...
+*ملخص:
+اضغط باستمرار على "مفتاح المسافة" لرفع وجهة النظر.
 
-Continue with "RETURN" ...
-*Navigation:
-Turn the view until the track with the two towers is in front of you.
-Use the "ARROW" keys (without "SHIFT") to move the ball 
-forward, backward, left and right.
-Follow the path!
-*Life Extra:
-If you fall off the track, you lose one life. 
-Your remaining lifes are displayed at the right bottom of the screen. 
-You receive an additional life by picking up a "Life Extra".
+تواصل مع "RETURN" ...
+*ملاحة:
+أدر العرض حتى يصبح المسار مع البرجين أمامك.
+استخدم مفاتيح "الأسهم" (بدون "SHIFT") لتحريك الكرة
+إلى الأمام والخلف واليسار واليمين.
+اتبع المسار!
+* حياة اضافية:
+إذا سقطت عن المسار ، فستفقد حياة واحدة.
+يتم عرض الحياة المتبقية في الجزء السفلي الأيمن من الشاشة.
+تحصل على حياة إضافية من خلال اختيار "Life Extra".
 
-Continue with "RETURN"  ...
-*Transformer:
-With the use of "transformers" you can change the material of the ball. 
-The material of the transformer field indicates the type of transformer. 
-This is a stone transformer.
+تواصل مع "RETURN" ...
+*محول:
+باستخدام "المحولات" يمكنك تغيير مادة الكرة.
+تشير مادة حقل المحول إلى نوع المحول.
+هذا محول حجري.
 
-Continue with "RETURN" ... 
-*This slope is too steep for a stoneball!
-Look for a wood transformer and try again. 
-Hint: Turn the view (SHIFT + RIGHT/LEFT), to get a better orientation. 
-Rolling backwards can be dangerous!
+تواصل مع "RETURN" ...
+* هذا المنحدر شديد الانحدار بالنسبة للكرة الحجرية!
+ابحث عن محول خشب وحاول مرة أخرى.
+تلميح: اقلب العرض (SHIFT + RIGHT / LEFT) للحصول على اتجاه أفضل.
+يمكن أن يكون التراجع إلى الوراء أمرًا خطيرًا!
 
-Continue with "RETURN" ...
-*Point Extra:
-The display on the left shows your actual time-points, 
-which are constantly decreasing during the game. 
-You increase your score by picking up a Point Extra.
+تواصل مع "RETURN" ...
+* نقطة اضافية:
+تُظهر الشاشة الموجودة على اليسار نقاطك الزمنية الفعلية ،
+التي تتناقص باستمرار أثناء اللعبة.
+يمكنك زيادة درجاتك عن طريق التقاط نقطة إضافية.
 
-Continue with "RETURN"  ...
-*Checkpoints:
-This is the first checkpoint you have to pass.
-In case you loose a life during the game, you can continue 
-the game from the last checkpoint.
+تواصل مع "RETURN" ...
+*نقاط تفتيش:
+هذه هي أول نقطة تفتيش عليك عبورها.
+في حالة فقدان حياتك أثناء اللعبة ، يمكنك الاستمرار
+اللعبة من آخر نقطة تفتيش.
 
-Continue with "RETURN"  ...
-*Some hints at the end:
-In case you get stuck at some point or need some technical help, 
-please take a look at the "Ballance HTML Help", which is accessible 
-via the Windows Start Menu (not during the game!).
+تواصل مع "RETURN" ...
+* بعض التلميحات في النهاية:
+في حال واجهتك مشكلة في مرحلة ما أو كنت بحاجة إلى بعض المساعدة الفنية ،
+يرجى إلقاء نظرة على "Ballance HTML Help" ، والتي يمكن الوصول إليها
+عبر قائمة ابدأ في Windows (وليس أثناء اللعبة!).
 
-Quit the tutorial with "RETURN" ...
+قم بإنهاء البرنامج التعليمي باستخدام "RETURN" ...

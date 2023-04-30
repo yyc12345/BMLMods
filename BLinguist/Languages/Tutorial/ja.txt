@@ -1,54 +1,54 @@
-Game Tutorial:
-You may halt or quit the game any time using the "ESC" key.
-You may continue the game tutorial with the "RETURN" key 
-or quit the tutorial by pressing "Q".
-*View Rotation: 
-Keep the left "SHIFT" key pressed and use the "LEFT" 
-or "RIGHT" ARROW key to rotate the view in 90° steps.
+ゲームのチュートリアル:
+「ESC」キーを使用して、いつでもゲームを停止または終了できます。
+「RETURN」キーでゲームのチュートリアルを続けることができます
+または「Q」を押してチュートリアルを終了します。
+*ビューの回転:
+左の「SHIFT」キーを押したままにして、「LEFT」を使用します
+または「右」矢印キーを使用して、ビューを 90° ずつ回転させます。
 
-Continue with "RETURN" ...
-*Overview:
-Hold down the "SPACEBAR" to raise the viewpoint.
+「RETURN」を続けて……
+*オーバールック:
+「SPACEBAR」を長押しすると視点が上がります。
 
-Continue with "RETURN" ...
-*Navigation:
-Turn the view until the track with the two towers is in front of you.
-Use the "ARROW" keys (without "SHIFT") to move the ball 
-forward, backward, left and right.
-Follow the path!
-*Life Extra:
-If you fall off the track, you lose one life. 
-Your remaining lifes are displayed at the right bottom of the screen. 
-You receive an additional life by picking up a "Life Extra".
+「RETURN」を続けて……
+*ナビゲーション:
+2 つの塔のある線路が目の前になるまでビューを回転させます。
+「矢印」キー (「SHIFT」なし) を使用してボールを移動します。
+前、後ろ、左、右。
+パスに従ってください！
+*ライフエクストラ:
+コースから外れると、ライフが 1 つ失われます。
+画面右下に残りライフが表示されます。
+「ライフエクストラ」を拾うと追加ライフがもらえます。
 
-Continue with "RETURN"  ...
-*Transformer:
-With the use of "transformers" you can change the material of the ball. 
-The material of the transformer field indicates the type of transformer. 
-This is a stone transformer.
+「RETURN」を続けて……
+*変成器：
+「トランスフォーマー」を使えば、ボールの素材を変えることができます。
+変圧器フィールドの材質は、変圧器のタイプを示します。
+これは石の変圧器です。
 
-Continue with "RETURN" ... 
-*This slope is too steep for a stoneball!
-Look for a wood transformer and try again. 
-Hint: Turn the view (SHIFT + RIGHT/LEFT), to get a better orientation. 
-Rolling backwards can be dangerous!
+「RETURN」を続けて……
+*この坂はストーンボールにはきつすぎる！
+木製変圧器を探して、もう一度試してください。
+ヒント: ビューを回転させて (SHIFT + RIGHT/LEFT)、より適切な向きにします。
+逆回転は危険！
 
-Continue with "RETURN" ...
-*Point Extra:
-The display on the left shows your actual time-points, 
-which are constantly decreasing during the game. 
-You increase your score by picking up a Point Extra.
+「RETURN」を続けて……
+*おまけポイント：
+左側のディスプレイには、実際の時点が表示されます。
+ゲーム中に常に減少しています。
+ポイントエクストラを獲得することで、スコアを増やします。
 
-Continue with "RETURN"  ...
-*Checkpoints:
-This is the first checkpoint you have to pass.
-In case you loose a life during the game, you can continue 
-the game from the last checkpoint.
+「RETURN」を続けて……
+*チェックポイント：
+最初に通過しなければならないチェックポイントです。
+ゲーム中にライフを失った場合は、続行できます
+最後のチェックポイントからのゲーム。
 
-Continue with "RETURN"  ...
-*Some hints at the end:
-In case you get stuck at some point or need some technical help, 
-please take a look at the "Ballance HTML Help", which is accessible 
-via the Windows Start Menu (not during the game!).
+「RETURN」を続けて……
+*最後にいくつかのヒント:
+行き詰った場合や技術的なサポートが必要な場合は、
+アクセス可能な「Balance HTML Help」をご覧ください。
+Windows の [スタート] メニューから (ゲーム中ではありません!)。
 
-Quit the tutorial with "RETURN" ...
+「RETURN」でチュートリアルを終了して……
