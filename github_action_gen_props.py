@@ -1,17 +1,31 @@
 import xml.dom.minidom as minidom
 import xml.dom
-import os
-import sys
+import os, sys, argparse
 
-if len(sys.argv) != 3:
-    print("Error parameter!")
-    print("Format: python3 mk_materializer_cfg.py [bml path] [output folder]")
-    sys.exit(1)
+# Analyze command
 
-bml_path = os.path.abspath(sys.argv[1])
-output_path = os.path.abspath(sys.argv[2])
+parser = argparse.ArgumentParser(description='MSVC Props Generator')
+parser.add_argument('-t', '--bml-type', required=True, action='store', dest='bml_type', choices=('BML', 'BMLP'))
+parser.add_argument('-p', '--output-path', required=True, action='store', dest='output_path')
+parser.add_argument('-s', '--output-suffix', required=True, action='store', dest='output_suffix')
+parser.add_argument('-i', '--bml-include-path', required=True, action='store', dest='bml_include_path')
+parser.add_argument('-l', '--bml-lib-path', required=True, action='store', dest='bml_lib_path')
+parser.add_argument('-n', '--bml-lib-name', required=True, action='store', dest='bml_lib_name')
+
+args = parser.parse_args()
+
+bml_type = 'YYCMOD_' + args.bml_type + '_USED'
+bml_include_path = os.path.abspath(args.bml_include_path)
+bml_lib_path = os.path.abspath(args.bml_lib_path)
+bml_lib_name = args.bml_lib_name
+output_path = os.path.abspath(args.output_path)
 if not (output_path.endswith("/") or output_path.endswith("\\")):
     output_path += '\\'
+output_suffix = args.output_suffix
+if not output_suffix.startswith('.'):
+    output_suffix = '.' + output_suffix
+
+# Write prop files
 
 def write_macro(dom, node_property_group, node_item_group, macro_upcase, data):
     node = dom.createElement(macro_upcase)
@@ -41,8 +55,12 @@ root.appendChild(node_property_group)
 node_item_group = dom.createElement('ItemGroup')
 root.appendChild(node_item_group)
 
-write_macro(dom, node_property_group, node_item_group, 'YYCMOD_OUTPUT', output_path)
-write_macro(dom, node_property_group, node_item_group, 'BMLDEV_PATH', bml_path)
+write_macro(dom, node_property_group, node_item_group, 'YYCMOD_OUTPUT_PATH', output_path)
+write_macro(dom, node_property_group, node_item_group, 'YYCMOD_OUTPUT_SUFFIX', output_suffix)
+write_macro(dom, node_property_group, node_item_group, 'BML_TYPE', bml_type)
+write_macro(dom, node_property_group, node_item_group, 'BML_INCLUDE_PATH', bml_include_path)
+write_macro(dom, node_property_group, node_item_group, 'BML_LIB_PATH', bml_lib_path)
+write_macro(dom, node_property_group, node_item_group, 'BML_LIB_NAME', bml_lib_name)
 
 with open('MacroProp.props', 'w', encoding='utf-8') as f:
     dom.writexml(f, addindent='\t', newl='\n', encoding='utf-8')

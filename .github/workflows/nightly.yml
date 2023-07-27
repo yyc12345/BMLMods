@@ -36,7 +36,7 @@ jobs:
     - name: Generating props
       shell: cmd
       run: |
-        py github_action_gen_props.py bml_dev bml_output
+        py github_action_gen_props.py -t BML -p bml_output -s ".bmod" -i bml_dev/include -l bml_dev/lib/Release -n BML.lib
     - name: Building BML Mods
       shell: cmd
       run: |
