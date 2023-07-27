@@ -52,10 +52,12 @@ namespace YYCHelper {
 	}
 
 	namespace BMLPlusPatch {
+#if defined(YYCMOD_BMLP_USED)
 		class CKBehaviorIOWrapper : public CKBehaviorIO {
 		public:
 			XSObjectPointerArray* GetLinks();
 		};
+#endif
 	}
 
 	namespace ModEvents {
