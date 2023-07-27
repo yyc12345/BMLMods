@@ -4,6 +4,11 @@ import os, sys, argparse
 
 # Analyze command
 
+def abs_path_collection(path_collection):
+    return ';'.join(
+        map(lambda x: os.path.abspath(x), path_collection.split(';'))
+    )
+
 parser = argparse.ArgumentParser(description='MSVC Props Generator')
 parser.add_argument('-t', '--bml-type', required=True, action='store', dest='bml_type', choices=('BML', 'BMLP'))
 parser.add_argument('-p', '--output-path', required=True, action='store', dest='output_path')
@@ -15,8 +20,8 @@ parser.add_argument('-n', '--bml-lib-name', required=True, action='store', dest=
 args = parser.parse_args()
 
 bml_type = 'YYCMOD_' + args.bml_type + '_USED'
-bml_include_path = os.path.abspath(args.bml_include_path)
-bml_lib_path = os.path.abspath(args.bml_lib_path)
+bml_include_path = abs_path_collection(args.bml_include_path)
+bml_lib_path = abs_path_collection(args.bml_lib_path)
 bml_lib_name = args.bml_lib_name
 output_path = os.path.abspath(args.output_path)
 if not (output_path.endswith("/") or output_path.endswith("\\")):
@@ -61,6 +66,8 @@ write_macro(dom, node_property_group, node_item_group, 'BML_TYPE', bml_type)
 write_macro(dom, node_property_group, node_item_group, 'BML_INCLUDE_PATH', bml_include_path)
 write_macro(dom, node_property_group, node_item_group, 'BML_LIB_PATH', bml_lib_path)
 write_macro(dom, node_property_group, node_item_group, 'BML_LIB_NAME', bml_lib_name)
+# solve shitty string onvertion error for BMLP
+write_macro(dom, node_property_group, node_item_group, 'BML_EXTRA_OPTIONS', '/Zc:strictStrings-' if args.bml_type == 'BMLP' else '')
 
 with open('MacroProp.props', 'w', encoding='utf-8') as f:
     dom.writexml(f, addindent='\t', newl='\n', encoding='utf-8')

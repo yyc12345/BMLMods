@@ -155,19 +155,19 @@ void FontCraft::OnUnload() {
 	}
 }
 
-void FontCraft::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
-	CK_CLASSID filterClass, BOOL addtoscene, BOOL reuseMeshes, BOOL reuseMaterials,
-	BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) {
+void FontCraft::OnLoadObject(BML_CKSTRING filename, BML_BOOL isMap, BML_CKSTRING masterName,
+	CK_CLASSID filterClass, BML_BOOL addtoscene, BML_BOOL reuseMeshes, BML_BOOL reuseMaterials,
+	BML_BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) {
 
 	// process menu.nmo
 	if (strcmp(filename, "3D Entities\\Menu.nmo")) return;
 
 	if (m_core_props[0]->GetBoolean()) {
-		CKContext* ctx = m_bml->GetCKContext();
-
+		CKContext* ctx = BML_VISITOR->GetCKContext();
+		
 		// process image
 		GetLogger()->Info("Processing Font_1...");
-		CKTexture* font = (CKTexture*)ctx->GetObjectByName("Font_1");
+		CKTexture* font = (CKTexture*)ctx->GetObjectByName(BML_TOCKSTRING("Font_1"));
 		Gdiplus::BitmapData gdiimage;
 		CKBYTE* ckimage = NULL;
 		Gdiplus::Rect lockTerrtory(0, 0, HW_IMG, HW_IMG);
@@ -193,7 +193,7 @@ void FontCraft::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
 
 		// process ck array
 		GetLogger()->Info("Processing M_FontData_01...");
-		CKDataArray* dataarray = (CKDataArray*)ctx->GetObjectByName("M_FontData_01");
+		CKDataArray* dataarray = (CKDataArray*)ctx->GetObjectByName(BML_TOCKSTRING("M_FontData_01"));
 		dataarray->Clear();
 		int counter = 0;
 		for (auto iter = ckarrayData.begin(); iter != ckarrayData.end(); counter++, iter++) {

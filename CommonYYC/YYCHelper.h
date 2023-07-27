@@ -1,6 +1,21 @@
 #pragma once
 
+#if defined(YYCMOD_BML_USED)
 #include <BML/BMLAll.h>
+typedef CKSTRING BML_CKSTRING;
+typedef BOOL BML_BOOL;
+#define BML_TOCKSTRING(s) (s)
+#define BML_VISITOR (m_bml)
+#elif defined(YYCMOD_BMLP_USED)
+#include <BMLPlus/BMLAll.h>
+typedef const char* BML_CKSTRING;
+typedef CKBOOL BML_BOOL;
+#define BML_TOCKSTRING(s) TOCKSTRING(s)
+#define BML_VISITOR (m_BML)
+#else
+#error "UNKNOW BML!"
+#endif
+
 #include <Windows.h>
 #include <string>
 #include <functional>

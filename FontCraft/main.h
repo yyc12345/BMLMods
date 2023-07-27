@@ -1,10 +1,9 @@
 #pragma once
 
-#include <BML/BMLAll.h>
+#include <YYCHelper.h>
 #include <gdiplus.h>
 #include <vector>
 #include <string>
-#include <YYCHelper.h>
 
 using namespace Gdiplus;
 
@@ -47,11 +46,11 @@ private:
 	std::vector<FontData*> ckarrayData;
 
 public:
-	virtual CKSTRING GetID() override { return "FontCraft"; }
-	virtual CKSTRING GetVersion() override { return BML_VERSION; }
-	virtual CKSTRING GetName() override { return "Font Craft"; }
-	virtual CKSTRING GetAuthor() override { return "yyc12345"; }
-	virtual CKSTRING GetDescription() override { return "Change Ballance Font."; }
+	virtual BML_CKSTRING GetID() override { return "FontCraft"; }
+	virtual BML_CKSTRING GetVersion() override { return BML_VERSION; }
+	virtual BML_CKSTRING GetName() override { return "Font Craft"; }
+	virtual BML_CKSTRING GetAuthor() override { return "yyc12345"; }
+	virtual BML_CKSTRING GetDescription() override { return "Change Ballance Font."; }
 	DECLARE_BML_VERSION;
 
 public:
@@ -60,9 +59,9 @@ public:
 private:
 	virtual void OnLoad() override;
 	virtual void OnUnload() override;
-	virtual void OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
-		CK_CLASSID filterClass, BOOL addtoscene, BOOL reuseMeshes, BOOL reuseMaterials,
-		BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) override;
+	virtual void OnLoadObject(BML_CKSTRING filename, BML_BOOL isMap, BML_CKSTRING masterName,
+		CK_CLASSID filterClass, BML_BOOL addtoscene, BML_BOOL reuseMeshes, BML_BOOL reuseMaterials,
+		BML_BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) override;
 
 
 };
