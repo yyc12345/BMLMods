@@ -1,6 +1,6 @@
 #pragma once
 
-#include <BML/BMLAll.h>
+#include <YYCHelper.h>
 #include "../FontCraft/main.h"
 #include "LangManager.h"
 #include "LabelManager.h"
@@ -15,24 +15,30 @@ struct BLinguistSettings {
 };
 
 class BLinguist : public IMod {
+
+	// solve the problem that get links from CKBehaviorIO
+#if defined(YYCMOD_BMLP_USED)
+	friend class CKBehaviorIO;
+#endif
+
 public:
 	BLinguist(IBML* bml) :
 		IMod(bml), mLaunchSettings(), mLabelsCollection(nullptr) {
 	}
 
-	virtual CKSTRING GetID() override { return "BLinguist"; }
-	virtual CKSTRING GetVersion() override { return BML_VERSION; }
-	virtual CKSTRING GetName() override { return "Ballance Linguist"; }
-	virtual CKSTRING GetAuthor() override { return "2jjy, jxpxxzj, yyc12345"; }
-	virtual CKSTRING GetDescription() override { return "Provide more languages for Ballance."; }
+	virtual YYCBML_CKSTRING GetID() override { return "BLinguist"; }
+	virtual YYCBML_CKSTRING GetVersion() override { return YYCMOD_VERSION_BLINGUIST; }
+	virtual YYCBML_CKSTRING GetName() override { return "Ballance Linguist"; }
+	virtual YYCBML_CKSTRING GetAuthor() override { return "2jjy, jxpxxzj, yyc12345"; }
+	virtual YYCBML_CKSTRING GetDescription() override { return "Provide more languages for Ballance."; }
 	DECLARE_BML_VERSION;
 
 private:
 	virtual void OnLoad() override;
-	virtual void OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
-		CK_CLASSID filterClass, BOOL addtoscene, BOOL reuseMeshes, BOOL reuseMaterials,
-		BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) override;
-	virtual void OnLoadScript(CKSTRING filename, CKBehavior* script) override;
+	virtual void OnLoadObject(YYCBML_CKSTRING filename, YYCBML_BOOL isMap, YYCBML_CKSTRING masterName,
+		CK_CLASSID filterClass, YYCBML_BOOL addtoscene, YYCBML_BOOL reuseMeshes, YYCBML_BOOL reuseMaterials,
+		YYCBML_BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) override;
+	virtual void OnLoadScript(YYCBML_CKSTRING filename, CKBehavior* script) override;
 	virtual void OnProcess() override;
 	virtual void OnExitGame() override;
 	//virtual void OnPostLoadLevel() override;

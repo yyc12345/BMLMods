@@ -1,6 +1,6 @@
 #pragma once
 
-#include <BML/BMLAll.h>
+#include <YYCHelper.h>
 
 void AddShadowForGroup(CKGroup* grp);
 void CopyToAnotherGroup(CKGroup* group1, CKGroup* group2);

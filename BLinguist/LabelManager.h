@@ -1,6 +1,6 @@
 #pragma once
 
-#include <BML/BMLAll.h>
+#include <YYCHelper.h>
 #include "LangManager.h"
 #include <string>
 

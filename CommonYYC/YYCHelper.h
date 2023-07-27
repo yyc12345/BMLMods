@@ -2,16 +2,16 @@
 
 #if defined(YYCMOD_BML_USED)
 #include <BML/BMLAll.h>
-typedef CKSTRING BML_CKSTRING;
-typedef BOOL BML_BOOL;
-#define BML_TOCKSTRING(s) (s)
-#define BML_VISITOR (m_bml)
+typedef CKSTRING YYCBML_CKSTRING;
+typedef BOOL YYCBML_BOOL;
+#define YYCBML_TOCKSTRING(s) (s)
+#define YYCBML_VISITOR (m_bml)
 #elif defined(YYCMOD_BMLP_USED)
 #include <BMLPlus/BMLAll.h>
-typedef const char* BML_CKSTRING;
-typedef CKBOOL BML_BOOL;
-#define BML_TOCKSTRING(s) TOCKSTRING(s)
-#define BML_VISITOR (m_BML)
+typedef const char* YYCBML_CKSTRING;
+typedef CKBOOL YYCBML_BOOL;
+#define YYCBML_TOCKSTRING(s) TOCKSTRING(s)
+#define YYCBML_VISITOR (m_BML)
 #else
 #error "UNKNOW BML!"
 #endif
@@ -21,13 +21,20 @@ typedef CKBOOL BML_BOOL;
 #include <functional>
 #include <vector>
 
+// VERSION DEFINE
+#define YYCMOD_VERSION_BLINGUIST "1.0.0"
+#define YYCMOD_VERSION_FONTCRAFT "2.0.0"
+#define YYCMOD_VERSION_BASECMOCFG "1.0.0"
+#define YYCMOD_VERSION_BALLANCEOPTIFINE "1.0.0"
+#define YYCMOD_VERSION_EXTRASECTOR "1.0.0"
+
 namespace YYCHelper {
 	namespace StringHelper {
 
 		void StdstringPrintf(std::string& strl, const char* format, ...);
 		void StdstringVPrintf(std::string& strl, const char* format, va_list argptr);
 
-		bool CKStringEqual(CKSTRING str1, CKSTRING str2);
+		bool CKStringEqual(const char* str1, const char* str2);
 
 	}
 
@@ -42,6 +49,13 @@ namespace YYCHelper {
 		bool CharToChar(const char* src, std::string& dest, const UINT src_codepage, const UINT dest_codepage);
 		bool CharToChar(const std::string& src, std::string& dest, const UINT src_codepage, const UINT dest_codepage);
 
+	}
+
+	namespace BMLPlusPatch {
+		class CKBehaviorIOWrapper : public CKBehaviorIO {
+		public:
+			XSObjectPointerArray* GetLinks();
+		};
 	}
 
 	namespace ModEvents {

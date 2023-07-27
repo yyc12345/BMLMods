@@ -1,5 +1,4 @@
 #include "LabelManager.h"
-#include <YYCHelper.h>
 #include <array>
 #include <sstream>
 
@@ -40,10 +39,10 @@ namespace NSBLinguist::LabelManager {
 		std::string native_str;
 		if (!YYCHelper::EncodingHelper::CharToChar(text, native_str, CP_UTF8, CP_ACP)) {
 			// fallback, use utf8 anywway
-			this->tt->SetText(text.c_str());
+			this->tt->SetText(YYCBML_TOCKSTRING(text.c_str()));
 		} else {
 			// success.
-			this->tt->SetText(native_str.c_str());
+			this->tt->SetText(YYCBML_TOCKSTRING(native_str.c_str()));
 		}
 	}
 
@@ -66,11 +65,11 @@ namespace NSBLinguist::LabelManager {
 		const Vx2DVector& pos, const Vx2DVector& size) :
 		mCtx(ctx), mWatching(nullptr), mCreated(nullptr) {
 		// create new entity
-		mCreated = (CK2dEntity*)mCtx->CreateObject(CKCID_2DENTITY, this_entity.c_str(), CK_OBJECTCREATION_NONAMECHECK);
+		mCreated = (CK2dEntity*)mCtx->CreateObject(CKCID_2DENTITY, YYCBML_TOCKSTRING(this_entity.c_str()), CK_OBJECTCREATION_NONAMECHECK);
 		ctx->GetCurrentLevel()->AddObject(mCreated);
 
 		// try getting ref entity
-		CKObject* obj = mCtx->GetObjectByNameAndClass(watching.c_str(), CKCID_2DENTITY, NULL);
+		CKObject* obj = mCtx->GetObjectByNameAndClass(YYCBML_TOCKSTRING(watching.c_str()), CKCID_2DENTITY, NULL);
 		if (obj != nullptr && obj->GetClassID() == CKCID_2DENTITY) {
 			mWatching = (CK2dEntity*)obj;
 		}
@@ -106,7 +105,7 @@ namespace NSBLinguist::LabelManager {
 		mWatchingEntity(nullptr), mFontSize(fontsize) {
 
 		// get watching entity
-		CKObject* obj = mCtx->GetObjectByNameAndClass(watching.c_str(), CKCID_2DENTITY, NULL);
+		CKObject* obj = mCtx->GetObjectByNameAndClass(YYCBML_TOCKSTRING(watching.c_str()), CKCID_2DENTITY, NULL);
 		if (obj != nullptr && obj->GetClassID() == CKCID_2DENTITY) {
 			mWatchingEntity = (CK2dEntity*)obj;
 		}
@@ -116,7 +115,7 @@ namespace NSBLinguist::LabelManager {
 		mOper.SetVisible(false);
 		mOper.SetSize(sg_LabelSize);
 		mOper.SetAlignment(CKSPRITETEXT_ALIGNMENT(CKSPRITETEXT_HCENTER));
-		mOper.SetFont(fontname.c_str(), fontsize);
+		mOper.SetFont(YYCBML_TOCKSTRING(fontname.c_str()), fontsize);
 		mOper.SetText(text);
 	}
 
@@ -163,7 +162,7 @@ namespace NSBLinguist::LabelManager {
 			newline->SetVisible(false);
 			newline->SetSize(sg_LabelSize);
 			newline->SetAlignment(CKSPRITETEXT_ALIGNMENT(CKSPRITETEXT_LEFT));
-			newline->SetFont(fontname.c_str(), fontsize);
+			newline->SetFont(YYCBML_TOCKSTRING(fontname.c_str()), fontsize);
 			newline->SetText(linetext);
 
 			// insert it

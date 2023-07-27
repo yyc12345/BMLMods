@@ -28,7 +28,7 @@ namespace YYCHelper::StringHelper {
 		if (write_result < 0 || write_result > count) throw new std::length_error("Invalid write result in vsnprintf.");
 	}
 
-	bool CKStringEqual(CKSTRING str1, CKSTRING str2) {
+	bool CKStringEqual(const char* str1, const char* str2) {
 		return (std::strcmp(str1, str2) == 0);
 	}
 

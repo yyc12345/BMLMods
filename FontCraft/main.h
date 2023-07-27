@@ -46,11 +46,11 @@ private:
 	std::vector<FontData*> ckarrayData;
 
 public:
-	virtual BML_CKSTRING GetID() override { return "FontCraft"; }
-	virtual BML_CKSTRING GetVersion() override { return BML_VERSION; }
-	virtual BML_CKSTRING GetName() override { return "Font Craft"; }
-	virtual BML_CKSTRING GetAuthor() override { return "yyc12345"; }
-	virtual BML_CKSTRING GetDescription() override { return "Change Ballance Font."; }
+	virtual YYCBML_CKSTRING GetID() override { return "FontCraft"; }
+	virtual YYCBML_CKSTRING GetVersion() override { return YYCMOD_VERSION_FONTCRAFT; }
+	virtual YYCBML_CKSTRING GetName() override { return "Font Craft"; }
+	virtual YYCBML_CKSTRING GetAuthor() override { return "yyc12345"; }
+	virtual YYCBML_CKSTRING GetDescription() override { return "Change Ballance Font."; }
 	DECLARE_BML_VERSION;
 
 public:
@@ -59,9 +59,9 @@ public:
 private:
 	virtual void OnLoad() override;
 	virtual void OnUnload() override;
-	virtual void OnLoadObject(BML_CKSTRING filename, BML_BOOL isMap, BML_CKSTRING masterName,
-		CK_CLASSID filterClass, BML_BOOL addtoscene, BML_BOOL reuseMeshes, BML_BOOL reuseMaterials,
-		BML_BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) override;
+	virtual void OnLoadObject(YYCBML_CKSTRING filename, YYCBML_BOOL isMap, YYCBML_CKSTRING masterName,
+		CK_CLASSID filterClass, YYCBML_BOOL addtoscene, YYCBML_BOOL reuseMeshes, YYCBML_BOOL reuseMaterials,
+		YYCBML_BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) override;
 
 
 };

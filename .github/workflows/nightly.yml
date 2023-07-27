@@ -28,26 +28,49 @@ jobs:
         fileName: "BML-0.3.42-dev.zip"
         tarBall: false
         zipBall: false
-        out-file-path: "bml_dev"
-    - name: Decompressing BML Dev Package
+        out-file-path: "dev_package"
+    - name: Downloading BMLPlus Dev Package
+      uses: robinraju/release-downloader@v1.3
+      with:
+        repository: "yyc12345/BallanceModLoaderPlus"
+        latest: false
+        tag: "0.2.2"
+        fileName: " BMLP-0.2.2-dev.zip "
+        tarBall: false
+        zipBall: false
+        out-file-path: "dev_package"
+    - name: Decompressing Dev Packages
       shell: powershell
       run: |
-        Expand-Archive -Path 'bml_dev\BML-0.3.42-dev.zip' -DestinationPath 'bml_dev'
-    - name: Generating props
-      shell: cmd
-      run: |
-        py github_action_gen_props.py -t BML -p bml_output -s ".bmod" -i bml_dev/include -l bml_dev/lib/Release -n BML.lib
+        Expand-Archive -Path 'dev_package\BML-0.3.42-dev.zip' -DestinationPath 'bml_dev'
+        Expand-Archive -Path 'dev_package\BML-0.3.42-dev.zip' -DestinationPath 'bmlp_dev'
     - name: Building BML Mods
       shell: cmd
       run: |
+        py github_action_gen_props.py -t BML -p bml_output -s ".bmod" -i bml_dev/include -l bml_dev/lib/Release -n BML.lib
         set VS=${{ matrix.vs }}
         set VCVARS="C:\Program Files (x86)\Microsoft Visual Studio\%VS%\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
         if not exist %VCVARS% set VCVARS="C:\Program Files\Microsoft Visual Studio\%VS%\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
         call %VCVARS% ${{ matrix.msvc_arch }}
         MSBuild BMLMods.sln -p:Configuration=Release -p:Platform=x86
-    - name: Uploading Nightly Build
+    - name: Building BMLPlus Mods
+      shell: cmd
+      run: |
+        py github_action_gen_props.py -t BMLP -p bmlp_out -s ".bmodp" -i "bmlp_dev/ModLoader/Include;bmlp_dev/ModLoader/Include/BMLPlus/Virtools" -l bmlp_dev/ModLoader/Lib -n "BMLPlus.lib;VxMath.lib;CK2.lib"
+        set VS=${{ matrix.vs }}
+        set VCVARS="C:\Program Files (x86)\Microsoft Visual Studio\%VS%\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
+        if not exist %VCVARS% set VCVARS="C:\Program Files\Microsoft Visual Studio\%VS%\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
+        call %VCVARS% ${{ matrix.msvc_arch }}
+        MSBuild BMLMods.sln -p:Configuration=Release -p:Platform=x86
+    - name: Uploading BML Nightly Build
       uses: actions/upload-artifact@v3
       with:
-        name: bmlmods-nightly
+        name: BMLMods-nightly
         path: bml_output/*.bmod
+        retention-days: 30
+    - name: Uploading BMLPlus Nightly Build
+      uses: actions/upload-artifact@v3
+      with:
+        name: BMLPlusMods-nightly
+        path: bmlp_output/*.bmodp
         retention-days: 30

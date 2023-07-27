@@ -11,9 +11,9 @@ IMod* BMLEntry(IBML* bml) {
 //
 //}
 
-void ExtraSector::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
-	CK_CLASSID filterClass, BOOL addtoscene, BOOL reuseMeshes, BOOL reuseMaterials,
-	BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) {
+void ExtraSector::OnLoadObject(YYCBML_CKSTRING filename, YYCBML_BOOL isMap, YYCBML_CKSTRING masterName,
+	CK_CLASSID filterClass, YYCBML_BOOL addtoscene, YYCBML_BOOL reuseMeshes, YYCBML_BOOL reuseMaterials,
+	YYCBML_BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) {
 	// only active for map
 	if (!isMap) return;
 
@@ -21,7 +21,7 @@ void ExtraSector::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterNam
 	std::string sector_group_name;
 	CKGroup* sector_group = NULL;
 	CKBeObject* obj = NULL;
-	CKContext* ctx = m_bml->GetCKContext();
+	CKContext* ctx = YYCBML_VISITOR->GetCKContext();
 	CKAttributeManager* attr_mgr = ctx->GetAttributeManager();
 
 	// get destroy dep
@@ -40,7 +40,7 @@ void ExtraSector::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterNam
 	for (int index = 9; index < 9 + 1000; ++index) {
 		// get group
 		YYCHelper::StringHelper::StdstringPrintf(sector_group_name, "Sector_%d", index);
-		sector_group = (CKGroup*)ctx->GetObjectByNameAndClass(sector_group_name.c_str(), CKCID_GROUP, NULL);
+		sector_group = (CKGroup*)ctx->GetObjectByNameAndClass(YYCBML_TOCKSTRING(sector_group_name.c_str()), CKCID_GROUP, NULL);
 		if (sector_group == NULL) {
 			GetLogger()->Info("Attribute modify ok. Exit with sector: %d", index - 1);
 			detected_level = index - 1;
@@ -70,7 +70,7 @@ void ExtraSector::OnPostLoadLevel() {
 	// this mod do not need to process sector lower than 8
 	if (detected_level <= 8) return;
 
-	CKContext* ctx = m_bml->GetCKContext();
+	CKContext* ctx = YYCBML_VISITOR->GetCKContext();
 	CKDataArray* ph = (CKDataArray*)ctx->GetObjectByNameAndClass("PH", CKCID_DATAARRAY, NULL);
 
 	if (ph == NULL) {

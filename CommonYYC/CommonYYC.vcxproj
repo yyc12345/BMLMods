@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BMLPlusPatch.cpp" />
     <ClCompile Include="EncodingHelper.cpp" />
     <ClCompile Include="StringHelper.cpp" />
   </ItemGroup>

@@ -69,14 +69,14 @@ void BallanceOptiFine::OnLoad() {
 	if (m_enable_props[0]->GetBoolean() && m_enable_props[3]->GetBoolean()) {
 		VxImageDescEx imgs;
 		VxPixelFormat2ImageDesc(_32_ARGB8888, imgs);
-		m_bml->GetRenderManager()->SetDesiredTexturesVideoFormat(imgs);
+		YYCBML_VISITOR->GetRenderManager()->SetDesiredTexturesVideoFormat(imgs);
 		//m_bml->GetRenderManager()->SetRenderOptions("TextureVideoFormat", _32_ARGB8888);
 	}
 }
 
-void BallanceOptiFine::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
-	CK_CLASSID filterClass, BOOL addtoscene, BOOL reuseMeshes, BOOL reuseMaterials,
-	BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) {
+void BallanceOptiFine::OnLoadObject(YYCBML_CKSTRING filename, YYCBML_BOOL isMap, YYCBML_CKSTRING masterName,
+	CK_CLASSID filterClass, YYCBML_BOOL addtoscene, YYCBML_BOOL reuseMeshes, YYCBML_BOOL reuseMaterials,
+	YYCBML_BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) {
 	if (!isMap) return;
 	GetLogger()->Info("OptiFine detect loading map. Start processing.");
 	if (!m_enable_props[0]->GetBoolean()) return;
@@ -84,12 +84,12 @@ void BallanceOptiFine::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING mast
 	// shadow
 	if (m_enable_props[1]->GetBoolean()) {
 		// first, make sure a Shadow is exist
-		if (m_bml->GetGroupByName("Shadow") == NULL)
-			m_bml->GetCKContext()->CreateObject(CKCID_GROUP, "Shadow");
+		if (YYCBML_VISITOR->GetGroupByName("Shadow") == NULL)
+			YYCBML_VISITOR->GetCKContext()->CreateObject(CKCID_GROUP, "Shadow");
 		
-		CKGroup* GroupShadow = m_bml->GetGroupByName("Shadow");
-		CKGroup* GroupPhysFloors = m_bml->GetGroupByName("Phys_Floors");
-		CKGroup* GroupPhysFloorRails = m_bml->GetGroupByName("Phys_FloorRails");
+		CKGroup* GroupShadow = YYCBML_VISITOR->GetGroupByName("Shadow");
+		CKGroup* GroupPhysFloors = YYCBML_VISITOR->GetGroupByName("Phys_Floors");
+		CKGroup* GroupPhysFloorRails = YYCBML_VISITOR->GetGroupByName("Phys_FloorRails");
 
 		// Shadow group
 		if (m_shadow_props[0]->GetBoolean())
@@ -112,8 +112,8 @@ void BallanceOptiFine::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING mast
 		// iterate loaded object
 		CKMaterial* material = NULL;
 		CKObject* obj = NULL;
-		CKContext* ctx = m_bml->GetCKContext();
-		CKRenderContext* renderctx = m_bml->GetRenderManager()->GetRenderContext(0);
+		CKContext* ctx = YYCBML_VISITOR->GetCKContext();
+		CKRenderContext* renderctx = YYCBML_VISITOR->GetRenderManager()->GetRenderContext(0);
 		std::string texture_name;
 
 		for (auto it = objArray->Begin(); it != objArray->End(); ++it) {

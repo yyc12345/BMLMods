@@ -68,11 +68,11 @@ void BLinguist::OnLoad() {
 	// ========== try interacte with FontCraft ==========
 	if (mCfgFont_FontCraftSync->GetBoolean()) {
 		bool failed = true;
-		int modcount = m_bml->GetModCount();
+		int modcount = YYCBML_VISITOR->GetModCount();
 		for (int i = 0; i < modcount; ++i) {
-			IMod* modinstance = m_bml->GetMod(i);
+			IMod* modinstance = YYCBML_VISITOR->GetMod(i);
 			if (!YYCHelper::StringHelper::CKStringEqual(modinstance->GetID(), "FontCraft")) continue;
-			if (!YYCHelper::StringHelper::CKStringEqual(modinstance->GetVersion(), BML_VERSION)) continue;
+			if (!YYCHelper::StringHelper::CKStringEqual(modinstance->GetVersion(), YYCMOD_VERSION_FONTCRAFT)) continue;
 
 			// yes, this is font craft
 			FontCraft* fontcraft = dynamic_cast<FontCraft*>(modinstance);
@@ -90,9 +90,9 @@ void BLinguist::OnLoad() {
 	}
 }
 
-void BLinguist::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName, 
-	CK_CLASSID filterClass, BOOL addtoscene, BOOL reuseMeshes, BOOL reuseMaterials, 
-	BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) {
+void BLinguist::OnLoadObject(YYCBML_CKSTRING filename, YYCBML_BOOL isMap, YYCBML_CKSTRING masterName,
+	CK_CLASSID filterClass, YYCBML_BOOL addtoscene, YYCBML_BOOL reuseMeshes, YYCBML_BOOL reuseMaterials,
+	YYCBML_BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) {
 
 	// do not process if disabled
 	if (!mLaunchSettings.mEnabled) return;
@@ -101,7 +101,7 @@ void BLinguist::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
 
 	// process Languages.nmo
 	if (YYCHelper::StringHelper::CKStringEqual(filename, "3D Entities\\Language.nmo")) {
-		CKObject* obj = m_bml->GetCKContext()->GetObjectByNameAndClass("language", CKCID_DATAARRAY, NULL);
+		CKObject* obj = YYCBML_VISITOR->GetCKContext()->GetObjectByNameAndClass("language", CKCID_DATAARRAY, NULL);
 		if (obj == nullptr || obj->GetClassID() != CKCID_DATAARRAY) return;
 
 		CleanLanguagesNmo((CKDataArray*)obj);
@@ -112,7 +112,7 @@ void BLinguist::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
 
 }
 
-void BLinguist::OnLoadScript(CKSTRING filename, CKBehavior* script) {
+void BLinguist::OnLoadScript(YYCBML_CKSTRING filename, CKBehavior* script) {
 	// do not process if disabled
 	if (!mLaunchSettings.mEnabled) return;
 
@@ -161,7 +161,13 @@ void BLinguist::EditTutorialLoadingSkip(CKBehavior* script) {
 	// remove all links from this bb output
 	CKBehaviorIO* bbCreateString_CreateOut = bbCreateString->GetOutput(0);
 	if (bbCreateString_CreateOut == nullptr) return;
-	XSObjectPointerArray* cklinks = bbCreateString_CreateOut->GetLinks();	// backup first to prevent CK change it during for statement
+	// backup first to prevent CK change it during for statement
+#if defined(YYCMOD_BML_USED)
+	XSObjectPointerArray* cklinks = bbCreateString_CreateOut->GetLinks();
+#else
+	auto* wrapperBBCreateString_CreatOut = reinterpret_cast<YYCHelper::BMLPlusPatch::CKBehaviorIOWrapper*>(bbCreateString_CreateOut);
+	XSObjectPointerArray* cklinks = wrapperBBCreateString_CreatOut->GetLinks();
+#endif
 	std::vector<CKBehaviorLink*> links;
 	for (int i = 0; i < cklinks->Size(); ++i) {
 		links.emplace_back((CKBehaviorLink*)(*cklinks)[i]);
@@ -181,7 +187,7 @@ void BLinguist::CreateLabels(void) {
 	if (mLabelsCollection != nullptr) return;
 
 	auto instance = new NSBLinguist::LabelManager::LabelsCollection(
-		m_bml->GetCKContext(),
+		YYCBML_VISITOR->GetCKContext(),
 		mLaunchSettings.mUITr, mLaunchSettings.mTutorialTr,
 		mLaunchSettings.FontName, mLaunchSettings.FontSize
 	);

@@ -18,15 +18,15 @@ void BaseCmoCfg::OnLoad() {
 
 }
 
-void BaseCmoCfg::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
-	CK_CLASSID filterClass, BOOL addtoscene, BOOL reuseMeshes, BOOL reuseMaterials,
-	BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) {
+void BaseCmoCfg::OnLoadObject(YYCBML_CKSTRING filename, YYCBML_BOOL isMap, YYCBML_CKSTRING masterName,
+	CK_CLASSID filterClass, YYCBML_BOOL addtoscene, YYCBML_BOOL reuseMeshes, YYCBML_BOOL reuseMaterials,
+	YYCBML_BOOL dynamic, XObjectArray* objArray, CKObject* masterObj) {
 
 	// process base.cmo
 	if (strcmp(filename, "base.cmo")) return;
 	GetLogger()->Info("Capture base.cmo loaded event!");
 
-	CKContext* ctx = m_bml->GetCKContext();
+	CKContext* ctx = YYCBML_VISITOR->GetCKContext();
 	CKDataArray* gamesettings = (CKDataArray*)ctx->GetObjectByNameAndClass("GameSettings", CKCID_DATAARRAY, NULL);
 	
 	if (gamesettings == NULL) {
