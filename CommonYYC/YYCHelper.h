@@ -21,12 +21,21 @@ typedef CKBOOL YYCBML_BOOL;
 #include <functional>
 #include <vector>
 
+/*
+Version Bump up Priniciple:
+
+Version string is constructed by this format: `major.minor.build`
+* Increase `major` if the whole mod was refactored, or interface changed.
+* Increase `minor` if some small patch or feature added.
+* Increase `build` if no change but BML / BMLP version changed. If we need do some changes to port to new BML / BMLP, do not increase this, increase `minor` or `major` instead.
+*/
+
 // VERSION DEFINE
-#define YYCMOD_VERSION_BLINGUIST "1.0.0"
-#define YYCMOD_VERSION_FONTCRAFT "2.0.0"
-#define YYCMOD_VERSION_BASECMOCFG "1.0.0"
-#define YYCMOD_VERSION_BALLANCEOPTIFINE "1.0.0"
-#define YYCMOD_VERSION_EXTRASECTOR "1.0.0"
+#define YYCMOD_VERSION_BLINGUIST "1.0.1"
+#define YYCMOD_VERSION_FONTCRAFT "2.0.1"
+#define YYCMOD_VERSION_BASECMOCFG "1.0.1"
+#define YYCMOD_VERSION_BALLANCEOPTIFINE "1.0.1"
+#define YYCMOD_VERSION_EXTRASECTOR "1.0.1"
 
 namespace YYCHelper {
 	namespace StringHelper {

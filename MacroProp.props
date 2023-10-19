@@ -5,9 +5,9 @@
 		<YYCMOD_OUTPUT_PATH>F:\Ballance\BallanceBMLP\ModLoader\Mods\</YYCMOD_OUTPUT_PATH>
 		<YYCMOD_OUTPUT_SUFFIX>.bmodp</YYCMOD_OUTPUT_SUFFIX>
 		<BML_TYPE>YYCMOD_BMLP_USED</BML_TYPE>
-		<BML_INCLUDE_PATH>D:\CppLib\BMLP\ModLoader\Include;D:\CppLib\BMLP\ModLoader\Include\BMLPlus\Virtools</BML_INCLUDE_PATH>
-		<BML_LIB_PATH>D:\CppLib\BMLP\ModLoader\Lib</BML_LIB_PATH>
-		<BML_LIB_NAME>BMLPlus.lib;VxMath.lib;CK2.lib</BML_LIB_NAME>
+		<BML_INCLUDE_PATH>D:\CppLib\BMLP\Include;D:\CppLib\BMLP\Include\BMLPlus\Virtools</BML_INCLUDE_PATH>
+		<BML_LIB_PATH>D:\CppLib\BMLP\Lib</BML_LIB_PATH>
+		<BML_LIB_NAME>BMLPlus.lib;ImGui.lib;VxMath.lib;CK2.lib</BML_LIB_NAME>
 		<BML_EXTRA_OPTIONS>/Zc:strictStrings-</BML_EXTRA_OPTIONS>
 	</PropertyGroup>
 	<ItemGroup>

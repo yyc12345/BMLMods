@@ -24,8 +24,8 @@ jobs:
       with:
         repository: "yyc12345/BallanceModLoader"
         latest: false
-        tag: "0.3.42"
-        fileName: "BML-0.3.42-dev.zip"
+        tag: "0.3.43"
+        fileName: "BML-0.3.43-dev.zip"
         tarBall: false
         zipBall: false
         out-file-path: "dev_package"
@@ -34,16 +34,16 @@ jobs:
       with:
         repository: "yyc12345/BallanceModLoaderPlus"
         latest: false
-        tag: "v0.2.2"
-        fileName: " BMLP-0.2.2-dev.zip"
+        tag: "v0.2.3"
+        fileName: " BMLP-0.2.3-dev.zip"
         tarBall: false
         zipBall: false
         out-file-path: "dev_package"
     - name: Decompressing Dev Packages
       shell: powershell
       run: |
-        Expand-Archive -Path 'dev_package\BML-0.3.42-dev.zip' -DestinationPath 'bml_dev'
-        Expand-Archive -Path 'dev_package\BMLP-0.2.2-dev.zip' -DestinationPath 'bmlp_dev'
+        Expand-Archive -Path 'dev_package\BML-0.3.43-dev.zip' -DestinationPath 'bml_dev'
+        Expand-Archive -Path 'dev_package\BMLP-0.2.3-dev.zip' -DestinationPath 'bmlp_dev'
     - name: Building BML Mods
       shell: cmd
       run: |
@@ -56,7 +56,7 @@ jobs:
     - name: Building BMLPlus Mods
       shell: cmd
       run: |
-        py github_action_gen_props.py -t BMLP -p bmlp_output -s ".bmodp" -i "bmlp_dev/ModLoader/Include;bmlp_dev/ModLoader/Include/BMLPlus/Virtools" -l bmlp_dev/ModLoader/Lib -n "BMLPlus.lib;VxMath.lib;CK2.lib"
+        py github_action_gen_props.py -t BMLP -p bmlp_output -s ".bmodp" -i "bmlp_dev/Include;bmlp_dev/Include/BMLPlus/Virtools" -l bmlp_dev/Lib -n "BMLPlus.lib;VxMath.lib;CK2.lib"
         set VS=${{ matrix.vs }}
         set VCVARS="C:\Program Files (x86)\Microsoft Visual Studio\%VS%\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
         if not exist %VCVARS% set VCVARS="C:\Program Files\Microsoft Visual Studio\%VS%\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
