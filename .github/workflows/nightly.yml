@@ -56,7 +56,7 @@ jobs:
     - name: Building BMLPlus Mods
       shell: cmd
       run: |
-        py github_action_gen_props.py -t BMLP -p bmlp_output -s ".bmodp" -i "bmlp_dev/Include;bmlp_dev/Include/BMLPlus/Virtools" -l bmlp_dev/Lib -n "BMLPlus.lib;VxMath.lib;CK2.lib"
+        py github_action_gen_props.py -t BMLP -p bmlp_output -s ".bmodp" -i "bmlp_dev/Include;bmlp_dev/Include/BMLPlus/Virtools" -l bmlp_dev/Lib -n "BMLPlus.lib;ImGui.lib;VxMath.lib;CK2.lib"
         set VS=${{ matrix.vs }}
         set VCVARS="C:\Program Files (x86)\Microsoft Visual Studio\%VS%\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
         if not exist %VCVARS% set VCVARS="C:\Program Files\Microsoft Visual Studio\%VS%\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
