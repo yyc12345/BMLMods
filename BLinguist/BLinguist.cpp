@@ -64,6 +64,7 @@ void BLinguist::OnLoad() {
 	mLaunchSettings.mEnabled = mCfgCore_Enabled->GetBoolean();
 	mLaunchSettings.FontName = mCfgFont_Name->GetString();
 	mLaunchSettings.FontSize = mCfgFont_Size->GetInteger();
+	mLaunchSettings.FontColor = 0xFFFFFFFF;	// default color is white
 
 	// ========== try interacte with FontCraft ==========
 	if (mCfgFont_FontCraftSync->GetBoolean()) {
@@ -133,11 +134,21 @@ void BLinguist::OnExitGame() {
 
 
 void BLinguist::GetFontCraftSettingsCallback(std::nullptr_t t, FontCraftSettings settings) {
+	// apply font name and size
 	mLaunchSettings.FontName = settings.mFontName;
 	mLaunchSettings.FontSize = (int)(settings.mFontSize / 2.0f);
+	// apply font color
+	CKDWORD col = 0xFF;
+	col <<= 8;
+	col |= settings.mFontColor.mRed;
+	col <<= 8;
+	col |= settings.mFontColor.mGreen;
+	col <<= 8;
+	col |= settings.mFontColor.mBlue;
+	mLaunchSettings.FontColor = col;
 
-	GetLogger()->Info("Communicate with FontCraft success! Font name: \"%s\". Font size: %d", 
-		mLaunchSettings.FontName.c_str(), mLaunchSettings.FontSize);
+	GetLogger()->Info("Communicate with FontCraft success! Font name: \"%s\". Font size: %d. Font color (ARGB): 0x%08x.", 
+		mLaunchSettings.FontName.c_str(), mLaunchSettings.FontSize, mLaunchSettings.FontColor);
 }
 
 void BLinguist::CleanLanguagesNmo(CKDataArray* language) {
@@ -189,7 +200,7 @@ void BLinguist::CreateLabels(void) {
 	auto instance = new NSBLinguist::LabelManager::LabelsCollection(
 		YYCBML_VISITOR->GetCKContext(),
 		mLaunchSettings.mUITr, mLaunchSettings.mTutorialTr,
-		mLaunchSettings.FontName, mLaunchSettings.FontSize
+		mLaunchSettings.FontName, mLaunchSettings.FontSize, mLaunchSettings.FontColor
 	);
 	mLabelsCollection = instance;
 	GetLogger()->Info("Create Labels Collection done!");

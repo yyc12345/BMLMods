@@ -27,12 +27,14 @@ Version Bump up Priniciple:
 Version string is constructed by this format: `major.minor.build`
 * Increase `major` if the whole mod was refactored, or interface changed.
 * Increase `minor` if some small patch or feature added.
-* Increase `build` if no change but BML / BMLP version changed. If we need do some changes to port to new BML / BMLP, do not increase this, increase `minor` or `major` instead.
+* Increase `build` if no change but BML / BMLP version changed. 
+  If we need do some changes to port to new BML / BMLP, do not increase this, increase `minor` or `major` instead.
+* If a greater factor increased, all lower factors should be reset to 0.
 */
 
 // VERSION DEFINE
-#define YYCMOD_VERSION_BLINGUIST "1.0.1"
-#define YYCMOD_VERSION_FONTCRAFT "2.0.1"
+#define YYCMOD_VERSION_BLINGUIST "1.1.0"
+#define YYCMOD_VERSION_FONTCRAFT "3.0.0"
 #define YYCMOD_VERSION_BASECMOCFG "1.0.1"
 #define YYCMOD_VERSION_BALLANCEOPTIFINE "1.0.1"
 #define YYCMOD_VERSION_EXTRASECTOR "1.0.1"

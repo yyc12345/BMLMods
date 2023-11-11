@@ -16,6 +16,10 @@ struct FontData {
 	float vwidth;
 };
 
+struct FontCraftColor {
+	uint8_t mRed, mGreen, mBlue;
+};
+
 struct FontCraftSettings {
 	bool mEnabled;
 	std::string mFontName;
@@ -23,6 +27,7 @@ struct FontCraftSettings {
 	bool mIsItalic;
 	bool mIsBold;
 	bool mIsUnderLine;
+	FontCraftColor mFontColor;
 };
 
 class FontCraft : public IMod {
@@ -38,7 +43,7 @@ private:
 	using EventOnLoad_t = YYCHelper::ModEvents::ModEventDispatcher<std::nullptr_t, FontCraftSettings>;
 	EventOnLoad_t mEventOnLoad;
 
-	IProperty* m_core_props[6];
+	IProperty* m_core_props[7];
 
 	ULONG_PTR gdiplusToken;
 	GdiplusStartupInput gdiplusStartupInput;

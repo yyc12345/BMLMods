@@ -17,6 +17,7 @@ namespace NSBLinguist::LabelManager {
 		void SetVisible(bool is_visible);
 		void SetText(const std::string& text);
 		void SetFont(CKSTRING fontname, int fontsize);
+		void SetColor(CKDWORD colARGB);
 		void SetPosition(const Vx2DVector& pos);
 		void SetSize(const Vx2DVector& size);
 	private:
@@ -47,7 +48,7 @@ namespace NSBLinguist::LabelManager {
 	public:
 		LabelUI(CKContext* ctx,
 			const std::string& watching, const std::string& text,
-			const std::string& fontname, const int fontsize);
+			const std::string& fontname, const int fontsize, CKDWORD fontcolor);
 		LabelUI(const LabelUI&) = delete;
 		LabelUI& operator=(const LabelUI&) = delete;
 		~LabelUI();
@@ -64,7 +65,7 @@ namespace NSBLinguist::LabelManager {
 	{
 	public:
 		LabelTutorial(CKContext* ctx, const std::string& text,
-			const std::string& fontname, const int fontsize);
+			const std::string& fontname, const int fontsize, CKDWORD fontcolor);
 		LabelTutorial(const LabelTutorial&) = delete;
 		LabelTutorial& operator=(const LabelTutorial&) = delete;
 		~LabelTutorial();
@@ -82,7 +83,7 @@ namespace NSBLinguist::LabelManager {
 	public:
 		LabelsCollection(CKContext* ctx,
 			const LangManager::UITrCollection& ui, const LangManager::TutorialTrCollection& tutorial,
-			const std::string& fontname, const int fontsize);
+			const std::string& fontname, const int fontsize, CKDWORD fontcolor);
 		~LabelsCollection();
 
 		void Process(void);

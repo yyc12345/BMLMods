@@ -12,9 +12,9 @@ namespace NSBLinguist::LabelManager {
 		static const Vx2DVector sg_DefaultSpriteSize(320.0f, 32.0f);
 		this->SetSize(sg_DefaultSpriteSize);
 
-		// ARGB format
+		// set default color
 		static const CKDWORD sg_TextColor = 0xFFFFFFFF;
-		tt->SetTextColor(sg_TextColor);
+		this->SetColor(sg_TextColor);
 
 		tt->SetZOrder(100);
 
@@ -48,6 +48,10 @@ namespace NSBLinguist::LabelManager {
 
 	void BBTextDisplay::SetFont(CKSTRING fontname, int fontsize) {
 		this->tt->SetFont(fontname, fontsize, 400, 0, 0);
+	}
+
+	void BBTextDisplay::SetColor(CKDWORD colARGB) {
+		this->tt->SetTextColor(colARGB);
 	}
 
 	void BBTextDisplay::SetPosition(const Vx2DVector& pos) {
@@ -99,7 +103,7 @@ namespace NSBLinguist::LabelManager {
 
 	LabelUI::LabelUI(CKContext* ctx,
 		const std::string& watching, const std::string& text,
-		const std::string& fontname, const int fontsize) :
+		const std::string& fontname, const int fontsize, CKDWORD fontcolor) :
 
 		mOper(ctx), mCtx(ctx),
 		mWatchingEntity(nullptr), mFontSize(fontsize) {
@@ -116,6 +120,7 @@ namespace NSBLinguist::LabelManager {
 		mOper.SetSize(sg_LabelSize);
 		mOper.SetAlignment(CKSPRITETEXT_ALIGNMENT(CKSPRITETEXT_HCENTER));
 		mOper.SetFont(YYCBML_TOCKSTRING(fontname.c_str()), fontsize);
+		mOper.SetColor(fontcolor);
 		mOper.SetText(text);
 	}
 
@@ -146,7 +151,7 @@ namespace NSBLinguist::LabelManager {
 
 
 	LabelTutorial::LabelTutorial(CKContext* ctx, const std::string& text,
-		const std::string& fontname, const int fontsize) :
+		const std::string& fontname, const int fontsize, CKDWORD fontcolor) :
 		mCtx(ctx), mLines(), mFontSize(fontsize) {
 
 		// split text by line
@@ -163,6 +168,7 @@ namespace NSBLinguist::LabelManager {
 			newline->SetSize(sg_LabelSize);
 			newline->SetAlignment(CKSPRITETEXT_ALIGNMENT(CKSPRITETEXT_LEFT));
 			newline->SetFont(YYCBML_TOCKSTRING(fontname.c_str()), fontsize);
+			newline->SetColor(fontcolor);
 			newline->SetText(linetext);
 
 			// insert it
@@ -281,7 +287,7 @@ namespace NSBLinguist::LabelManager {
 	};
 	LabelsCollection::LabelsCollection(CKContext* ctx,
 		const LangManager::UITrCollection& ui, const LangManager::TutorialTrCollection& tutorial,
-		const std::string& fontname, const int fontsize) :
+		const std::string& fontname, const int fontsize, CKDWORD fontcolor) :
 
 		mUIList(), mTutorialList(), mOffsetEntities(), mCtx(ctx),
 		mUICounter(0) {
@@ -296,11 +302,11 @@ namespace NSBLinguist::LabelManager {
 
 		// init ui labels
 		for (size_t i = 0; i < ui.size(); ++i) {
-			this->mUIList.emplace_back(new LabelUI(mCtx, g_UIWatchingEntities[i], ui[i], fontname, fontsize));
+			this->mUIList.emplace_back(new LabelUI(mCtx, g_UIWatchingEntities[i], ui[i], fontname, fontsize, fontcolor));
 		}
 		// init tutorial labels
 		for (const auto& tut : tutorial) {
-			this->mTutorialList.emplace_back(new LabelTutorial(mCtx, tut, fontname, fontsize));
+			this->mTutorialList.emplace_back(new LabelTutorial(mCtx, tut, fontname, fontsize, fontcolor));
 		}
 	}
 

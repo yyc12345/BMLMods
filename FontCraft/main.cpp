@@ -1,4 +1,6 @@
 #include "main.h"
+#include <regex>
+#include <string>
 
 extern "C" {
 	__declspec(dllexport) IMod* BMLEntry(IBML* bml) {
@@ -11,6 +13,75 @@ extern "C" {
 #define HW_COUNT 16
 #define HW_CELL ((float)HW_IMG / (float)HW_COUNT)
 
+#pragma region Color String Parsing
+
+static bool ParseFactor(const std::string& num, uint8_t& factor, int base) {
+	try {
+		unsigned long long ret = std::stoull(num, nullptr, base);
+		if (ret > 255) return false;
+
+		factor = static_cast<uint8_t>(ret);
+		return true;
+	} catch (const std::invalid_argument&) {
+		return false;
+	} catch (const std::out_of_range&){
+		return false;
+	}
+}
+
+static bool ParseDecRGBColorString(std::string& strl, FontCraftColor& result) {
+	// try check rrr,ggg,bbb style. build regex
+	static std::regex re("([0-9]{1,3}) *, *([0-9]{1,3}) *, *([0-9]{1,3})", std::regex_constants::ECMAScript);
+	std::smatch base_match;
+	
+	if (std::regex_search(strl, base_match, re)) {
+		if (base_match.size() != 4) return false;
+
+		if (!ParseFactor(base_match[1].str(), result.mRed, 10)) return false;
+		if (!ParseFactor(base_match[2].str(), result.mGreen, 10)) return false;
+		if (!ParseFactor(base_match[3].str(), result.mBlue, 10)) return false;
+		return true;
+	} else {
+		return false;
+	}
+}
+
+static bool ParseHashTagHexColorString(std::string& strl, FontCraftColor& result) {
+	// try check #rrggbb style. build regex
+	static std::regex re("#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})", std::regex_constants::ECMAScript);
+	std::smatch base_match;
+	
+	if (std::regex_search(strl, base_match, re)) {
+		if (base_match.size() != 4) return false;
+
+		if (!ParseFactor(base_match[1].str(), result.mRed, 16)) return false;
+		if (!ParseFactor(base_match[2].str(), result.mGreen, 16)) return false;
+		if (!ParseFactor(base_match[3].str(), result.mBlue, 16)) return false;
+		return true;
+	} else {
+		return false;
+	}
+}
+
+static FontCraftColor ParseFontColorString(const char* colstr) {
+	// prepare default result (white)
+	static FontCraftColor default_result { 255, 255, 255 };
+	FontCraftColor result { 255, 255, 255 };
+
+	// check null. if not, parse it to std::string for regex.
+	if (colstr == nullptr) return default_result;
+	std::string stdcol(colstr);
+
+	// try parse with 2 style
+	if (ParseDecRGBColorString(stdcol, result)) return result;
+	if (ParseHashTagHexColorString(stdcol, result)) return result;
+
+	// if no match, return default
+	return default_result;
+}
+
+#pragma endregion
+
 FontCraftSettings FontCraft::GetFontCraftSettings(std::nullptr_t blank) {
 	FontCraftSettings settings;
 	settings.mEnabled = m_core_props[0]->GetBoolean();
@@ -19,6 +90,7 @@ FontCraftSettings FontCraft::GetFontCraftSettings(std::nullptr_t blank) {
 	settings.mIsItalic = m_core_props[3]->GetBoolean();
 	settings.mIsBold = m_core_props[4]->GetBoolean();
 	settings.mIsUnderLine = m_core_props[5]->GetBoolean();
+	settings.mFontColor = ParseFontColorString(m_core_props[6]->GetString());
 	return settings;
 }
 
@@ -53,6 +125,10 @@ void FontCraft::OnLoad() {
 	m_core_props[5] = GetConfig()->GetProperty("Core", "FontUnderLine");
 	m_core_props[5]->SetComment("Font underline?");
 	m_core_props[5]->SetDefaultBoolean(false);
+
+	m_core_props[6] = GetConfig()->GetProperty("Core", "FontColor");
+	m_core_props[6]->SetComment("The color of font. Support 2 style: RRR,GGG,BBB or #rrggbb. The factor of first style range from 0 to 255. The second style accept a hex number as a component from 00 to FF.");
+	m_core_props[6]->SetDefaultString("#ffffff");
 
 	// register handler
 	// because props had been loaded
@@ -93,7 +169,11 @@ void FontCraft::OnLoad() {
 		if (m_core_props[5]->GetBoolean())
 			fs = fs | FontStyle::FontStyleUnderline;
 		Gdiplus::Font ft(inputWChar.c_str(), m_core_props[2]->GetFloat(), (FontStyle)fs, Gdiplus::UnitPixel);
-		Gdiplus::SolidBrush sb(Gdiplus::Color::White);
+
+		FontCraftColor fontColor = ParseFontColorString(m_core_props[6]->GetString());
+		Gdiplus::Color gdiFontColor((BYTE)255u, (BYTE)fontColor.mRed, (BYTE)fontColor.mGreen, (BYTE)fontColor.mBlue);
+		Gdiplus::SolidBrush sb(gdiFontColor);
+
 		Gdiplus::StringFormat sf(Gdiplus::StringFormat::GenericTypographic());
 		sf.SetFormatFlags(sf.GetFormatFlags() | StringFormatFlags::StringFormatFlagsMeasureTrailingSpaces);
 
@@ -188,8 +268,6 @@ void FontCraft::OnLoadObject(YYCBML_CKSTRING filename, YYCBML_BOOL isMap, YYCBML
 			font->ReleaseSurfacePtr();
 			//font->FreeVideoMemory();
 		} else GetLogger()->Error("Fail to lock GDI+ image.");
-
-
 
 		// process ck array
 		GetLogger()->Info("Processing M_FontData_01...");

@@ -12,6 +12,7 @@ struct BLinguistSettings {
 
 	std::string FontName;
 	int FontSize;
+	CKDWORD FontColor;
 };
 
 class BLinguist : public IMod {
