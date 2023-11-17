@@ -38,6 +38,7 @@ Version string is constructed by this format: `major.minor.build`
 #define YYCMOD_VERSION_BASECMOCFG "1.0.1"
 #define YYCMOD_VERSION_BALLANCEOPTIFINE "1.0.1"
 #define YYCMOD_VERSION_EXTRASECTOR "1.0.1"
+#define YYCMOD_VERSION_BALLANCEBBOR "1.0.0"
 
 namespace YYCHelper {
 	namespace StringHelper {

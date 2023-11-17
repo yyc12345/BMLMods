@@ -14,7 +14,7 @@ Allow you change 2 settings located in `base.cmo`, God Mode and Debug Mode. Chan
 
 ### Coredump
 
-**This mod is work in progress.**
+**This mod is deprecated and not included in Visual Studio solution file.**
 
 Dump current game scene as a Virtools compisition file via commandline. Type `/help` to get this mod's command.
 
@@ -25,6 +25,14 @@ Allow you change Ballance default font. Input font name and style in mod configu
 ### ExtraSector
 
 Yet another 999 sector loader. (Named Extra_Sector in old BML)
+
+### BLinguist
+
+Multi-language support for Ballance. The improvement version of 2jjy & jxpxxzj Chinese version Ballance. Not only Chinese.
+
+### BallanceBBOR
+
+Ballance Bounding Box Outline Reloaded. Operate like the Minecraft mod with same name, but show the depth cubes, transformer sphere, ventilator activation area and etc instead.
 
 ## Compile
 

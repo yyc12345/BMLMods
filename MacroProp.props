@@ -2,13 +2,13 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<ImportGroup Label="PropertySheets"/>
 	<PropertyGroup Label="UserMacros">
-		<YYCMOD_OUTPUT_PATH>F:\Ballance\BallanceBMLP\ModLoader\Mods\</YYCMOD_OUTPUT_PATH>
-		<YYCMOD_OUTPUT_SUFFIX>.bmodp</YYCMOD_OUTPUT_SUFFIX>
-		<BML_TYPE>YYCMOD_BMLP_USED</BML_TYPE>
-		<BML_INCLUDE_PATH>D:\CppLib\BMLP\Include;D:\CppLib\BMLP\Include\BMLPlus\Virtools</BML_INCLUDE_PATH>
-		<BML_LIB_PATH>D:\CppLib\BMLP\Lib</BML_LIB_PATH>
-		<BML_LIB_NAME>BMLPlus.lib;ImGui.lib;VxMath.lib;CK2.lib</BML_LIB_NAME>
-		<BML_EXTRA_OPTIONS>/Zc:strictStrings-</BML_EXTRA_OPTIONS>
+		<YYCMOD_OUTPUT_PATH>F:\Ballance\BallanceBML\ModLoader\Mods\</YYCMOD_OUTPUT_PATH>
+		<YYCMOD_OUTPUT_SUFFIX>.bmod</YYCMOD_OUTPUT_SUFFIX>
+		<BML_TYPE>YYCMOD_BML_USED</BML_TYPE>
+		<BML_INCLUDE_PATH>D:\CppLib\BML\include</BML_INCLUDE_PATH>
+		<BML_LIB_PATH>D:\CppLib\BML\lib\Release</BML_LIB_PATH>
+		<BML_LIB_NAME>BML.lib</BML_LIB_NAME>
+		<BML_EXTRA_OPTIONS/>
 	</PropertyGroup>
 	<ItemGroup>
 		<BuildMacro Include="YYCMOD_OUTPUT_PATH">
