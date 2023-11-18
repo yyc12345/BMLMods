@@ -20,19 +20,26 @@ namespace YYCHelper::ColorStringParser {
 	}
 
 	static bool ParseDecRGBColorString(std::string& strl, VxColor& result) {
-		// try check rrr,ggg,bbb style. build regex
-		static std::regex re("([0-9]{1,3}) *, *([0-9]{1,3}) *, *([0-9]{1,3})", std::regex_constants::ECMAScript);
+		// try check rrr,ggg,bbb style or rrr,ggg,bbb,aaa style. build regex
+		// ?: is non-captured group.
+		static std::regex re("([0-9]{1,3}) *, *([0-9]{1,3}) *, *([0-9]{1,3})(?: *, *([0-9]{1,3}))?", std::regex_constants::ECMAScript);
 		std::smatch base_match;
 
 		if (std::regex_search(strl, base_match, re)) {
-			if (base_match.size() != 4) return false;
-
-			uint8_t r, g, b;
+			size_t group_count = base_match.size();
+			if (group_count != 4 && group_count != 5) return false;
+			
+			uint8_t r, g, b, a;
 			if (!ParseFactor(base_match[1].str(), r, 10)) return false;
 			if (!ParseFactor(base_match[2].str(), g, 10)) return false;
 			if (!ParseFactor(base_match[3].str(), b, 10)) return false;
+			if (group_count == 5) {
+				if (!ParseFactor(base_match[3].str(), a, 10)) return false;
+			} else {
+				a = 255;
+			}
 
-			result.Set(r, g, b, 255);
+			result.Set(r, g, b, a);
 			return true;
 		} else {
 			return false;
@@ -40,19 +47,25 @@ namespace YYCHelper::ColorStringParser {
 	}
 
 	static bool ParseHashTagHexColorString(std::string& strl, VxColor& result) {
-		// try check #rrggbb style. build regex
-		static std::regex re("#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})", std::regex_constants::ECMAScript);
+		// try check #rrggbb style or #rrggbbaa style. build regex
+		static std::regex re("#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})?", std::regex_constants::ECMAScript);
 		std::smatch base_match;
 
 		if (std::regex_search(strl, base_match, re)) {
-			if (base_match.size() != 4) return false;
+			size_t group_count = base_match.size();
+			if (group_count != 4 && group_count != 5) return false;
 			
-			uint8_t r, g, b;
+			uint8_t r, g, b, a;
 			if (!ParseFactor(base_match[1].str(), r, 16)) return false;
 			if (!ParseFactor(base_match[2].str(), g, 16)) return false;
 			if (!ParseFactor(base_match[3].str(), b, 16)) return false;
+			if (group_count == 5) {
+				if (!ParseFactor(base_match[4].str(), a, 16)) return false;
+			} else {
+				a = 255;
+			}
 
-			result.Set(r, g, b, 255);
+			result.Set(r, g, b, a);
 			return true;
 		} else {
 			return false;

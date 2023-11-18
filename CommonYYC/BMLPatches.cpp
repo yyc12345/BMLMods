@@ -18,7 +18,7 @@ namespace YYCHelper::BMLPatches {
 #if defined(YYCMOD_BML_USED)
 		return that->GetLinks();
 #else
-		auto* wrapperBBCreateString_CreatOut = reinterpret_cast<YYCHelper::BMLPlusPatch::CKBehaviorIOWrapper*>(that);
+		auto* wrapperBBCreateString_CreatOut = reinterpret_cast<CKBehaviorIOWrapper*>(that);
 		return wrapperBBCreateString_CreatOut->GetLinks();
 #endif
 	}

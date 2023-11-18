@@ -58,7 +58,7 @@ void FontCraft::OnLoad() {
 	m_core_props[5]->SetDefaultBoolean(false);
 
 	m_core_props[6] = GetConfig()->GetProperty("Core", "FontColor");
-	m_core_props[6]->SetComment("The color of font. Support 2 style: RRR,GGG,BBB or #rrggbb. The factor of first style range from 0 to 255. The second style accept a hex number as a component from 00 to FF.");
+	m_core_props[6]->SetComment("The color of font. Support 2 style (alpha is optional): RRR,GGG,BBB,AAA or #rrggbbaa. The factor of first style range from 0 to 255. The second style accept a hex number as a component from 00 to FF.");
 	m_core_props[6]->SetDefaultString("#ffffff");
 
 	// register handler
