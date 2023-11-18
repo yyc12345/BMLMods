@@ -16,10 +16,6 @@ struct FontData {
 	float vwidth;
 };
 
-struct FontCraftColor {
-	uint8_t mRed, mGreen, mBlue;
-};
-
 struct FontCraftSettings {
 	bool mEnabled;
 	std::string mFontName;
@@ -27,7 +23,7 @@ struct FontCraftSettings {
 	bool mIsItalic;
 	bool mIsBold;
 	bool mIsUnderLine;
-	FontCraftColor mFontColor;
+	VxColor mFontColor;
 };
 
 class FontCraft : public IMod {

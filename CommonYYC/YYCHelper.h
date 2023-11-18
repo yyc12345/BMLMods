@@ -33,8 +33,8 @@ Version string is constructed by this format: `major.minor.build`
 */
 
 // VERSION DEFINE
-#define YYCMOD_VERSION_BLINGUIST "1.1.0"
-#define YYCMOD_VERSION_FONTCRAFT "3.0.0"
+#define YYCMOD_VERSION_BLINGUIST "1.2.0"
+#define YYCMOD_VERSION_FONTCRAFT "4.0.0"
 #define YYCMOD_VERSION_BASECMOCFG "1.0.1"
 #define YYCMOD_VERSION_BALLANCEOPTIFINE "1.0.1"
 #define YYCMOD_VERSION_EXTRASECTOR "1.0.1"
@@ -63,13 +63,51 @@ namespace YYCHelper {
 
 	}
 
-	namespace BMLPlusPatch {
-#if defined(YYCMOD_BMLP_USED)
-		class CKBehaviorIOWrapper : public CKBehaviorIO {
-		public:
-			XSObjectPointerArray* GetLinks();
-		};
-#endif
+	namespace ColorStringParser {
+
+		/**
+		 * @brief Parse color string. Support hex digit and rgb.
+		 * @param colstr[in] The input color string.
+		 * @param value[out] The references receiving parsed color.
+		 * @return true if success. false when failed and out value will be set to default color (white)
+		*/
+		bool ParseColorString(const char* colstr, VxColor& result);
+
+	}
+
+	/**
+	 * The namespace which patch something different between BML and BMLP
+	*/
+	namespace BMLPatches {
+
+		/**
+		 * @brief Get links from CKBehaviorIO.
+		 * @remark
+		 * BML use some dirty way and expose this GetLinks interface.
+		 * But BMLP not, BMLP more vanilla so we need patch it and support this function like BML.
+		 * @return The links list.
+		*/
+		XSObjectPointerArray* CKBehaviorIO_GetLinks(CKBehaviorIO* that);
+
+		/**
+		 * @brief Returns the color in a DWORD in the 32 bit format ARGB and sets alpha to 255
+		 * @param that[in] The color.
+		 * @remark
+		 * BML does not implement the whole VxColor. but BMLP does.
+		 * So we patch it for BML because we need use it.
+		 * @return The ARGB color.
+		*/
+		CKDWORD VxColor_GetRGB(const VxColor& that);
+		/**
+		 * @brief Returns the color in a DWORD in the 32 bit format ARGB.
+		 * @param that[in] The color.
+		 * @remark
+		 * BML does not implement the whole VxColor. but BMLP does.
+		 * So we patch it for BML because we need use it.
+		 * @return The ARGB color.
+		*/
+		CKDWORD VxColor_GetRGBA(const VxColor& that);
+
 	}
 
 	namespace ModEvents {

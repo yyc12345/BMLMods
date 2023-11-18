@@ -21,7 +21,10 @@
     <ClCompile Include="EncodingHelper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="BMLPlusPatch.cpp">
+    <ClCompile Include="ColorStringParser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BMLPatches.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

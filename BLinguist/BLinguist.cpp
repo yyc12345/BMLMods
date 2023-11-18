@@ -138,14 +138,7 @@ void BLinguist::GetFontCraftSettingsCallback(std::nullptr_t t, FontCraftSettings
 	mLaunchSettings.FontName = settings.mFontName;
 	mLaunchSettings.FontSize = (int)(settings.mFontSize / 2.0f);
 	// apply font color
-	CKDWORD col = 0xFF;
-	col <<= 8;
-	col |= settings.mFontColor.mRed;
-	col <<= 8;
-	col |= settings.mFontColor.mGreen;
-	col <<= 8;
-	col |= settings.mFontColor.mBlue;
-	mLaunchSettings.FontColor = col;
+	mLaunchSettings.FontColor = YYCHelper::BMLPatches::VxColor_GetRGB(settings.mFontColor);
 
 	GetLogger()->Info("Communicate with FontCraft success! Font name: \"%s\". Font size: %d. Font color (ARGB): 0x%08x.", 
 		mLaunchSettings.FontName.c_str(), mLaunchSettings.FontSize, mLaunchSettings.FontColor);
@@ -173,16 +166,14 @@ void BLinguist::EditTutorialLoadingSkip(CKBehavior* script) {
 	CKBehaviorIO* bbCreateString_CreateOut = bbCreateString->GetOutput(0);
 	if (bbCreateString_CreateOut == nullptr) return;
 	// backup first to prevent CK change it during for statement
-#if defined(YYCMOD_BML_USED)
-	XSObjectPointerArray* cklinks = bbCreateString_CreateOut->GetLinks();
-#else
-	auto* wrapperBBCreateString_CreatOut = reinterpret_cast<YYCHelper::BMLPlusPatch::CKBehaviorIOWrapper*>(bbCreateString_CreateOut);
-	XSObjectPointerArray* cklinks = wrapperBBCreateString_CreatOut->GetLinks();
-#endif
+	// use patched method get current link list
+	XSObjectPointerArray* cklinks = YYCHelper::BMLPatches::CKBehaviorIO_GetLinks(bbCreateString_CreateOut);
+	// backup
 	std::vector<CKBehaviorLink*> links;
 	for (int i = 0; i < cklinks->Size(); ++i) {
 		links.emplace_back((CKBehaviorLink*)(*cklinks)[i]);
 	}
+	// then delete
 	for (const auto& link : links) {
 		ScriptHelper::DeleteLink(bbLoadTutorialText, link);
 	}
