@@ -35,7 +35,7 @@ namespace YYCHelper::BMLPatches {
 		return intcol;
 #else
 		// call directly
-		static_cast<CKDWORD>(RGBAFTOCOLOR(col));
+		return static_cast<CKDWORD>(RGBAFTOCOLOR(col));
 #endif
 	}
 	CKDWORD VxColor_GetRGB(const VxColor& that) {
@@ -44,7 +44,7 @@ namespace YYCHelper::BMLPatches {
 		return VxColor_RGBAFTOCOLOR(&that);
 #else
 		// call directly
-		static_cast<CKDWORD>(that.GetRGB());
+		return static_cast<CKDWORD>(that.GetRGB());
 #endif
 	}
 	CKDWORD VxColor_GetRGBA(const VxColor& that) {
@@ -53,7 +53,7 @@ namespace YYCHelper::BMLPatches {
 		return VxColor_RGBAFTOCOLOR(&that) | A_MASK;
 #else
 		// call directly
-		static_cast<CKDWORD>(that.GetRGBA());
+		return static_cast<CKDWORD>(that.GetRGBA());
 #endif
 	}
 
