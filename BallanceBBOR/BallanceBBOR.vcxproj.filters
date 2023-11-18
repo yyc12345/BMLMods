@@ -18,9 +18,27 @@
     <ClInclude Include="BallanceBBOR.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="StructDisplayCfg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Object3dManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshCreator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BallanceBBOR.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="StructDisplayCfg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Object3dManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshCreator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

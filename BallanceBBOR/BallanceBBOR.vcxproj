@@ -12,9 +12,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BallanceBBOR.h" />
+    <ClInclude Include="MeshCreator.h" />
+    <ClInclude Include="Object3dManager.h" />
+    <ClInclude Include="StructDisplayCfg.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BallanceBBOR.cpp" />
+    <ClCompile Include="MeshCreator.cpp" />
+    <ClCompile Include="Object3dManager.cpp" />
+    <ClCompile Include="StructDisplayCfg.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
