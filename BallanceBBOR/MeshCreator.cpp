@@ -1,10 +1,11 @@
 #include "MeshCreator.h"
+#include <numbers>
 
 namespace NSBallanceBBOR::MeshCreator {
 
 #pragma region Help Functions
 
-	constexpr float YYC_PI = PI;
+	constexpr float YYC_PI = std::numbers::pi_v<float>;
 	constexpr float YYC_2PI = YYC_PI * 2.0f;
 
 	/**
@@ -128,9 +129,9 @@ namespace NSBallanceBBOR::MeshCreator {
 				// set vertex position
 				// ring control the y data and segment control xz data
 				cache.Set(
-					std::cos((iseg / fsegments) * YYC_2PI) * radius,
+					std::cos((iseg / fsegments) * YYC_2PI) * radius * std::sin((iring / frings) * YYC_PI),
 					std::cos((iring / frings) * YYC_PI) * radius,
-					std::sin((iseg / fsegments) * YYC_2PI) * radius
+					std::sin((iseg / fsegments) * YYC_2PI) * radius * std::sin((iring / frings) * YYC_PI)
 				);
 				mesh->SetVertexPosition(idx, &cache);
 

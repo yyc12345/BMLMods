@@ -35,11 +35,14 @@ namespace NSBallanceBBOR {
 		StructDisplayCfg(IConfig* cfgmgr);
 		~StructDisplayCfg();
 
-		void RegisterProps();
+		bool IsGlobalEnabled();
 		StructDisplayCfgItem* GetCfgItem(BallanceStructType cfg_type);
 
 	private:
 		IConfig* mCfgMgr;
+		IProperty* mPropGlobalEnabled;
+
+		void RegisterProps();
 		std::map<BallanceStructType, StructDisplayCfgItem> mStructCfgs;
 	};
 

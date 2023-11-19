@@ -16,7 +16,7 @@ namespace NSBallanceBBOR {
 		mPropEnabled->SetComment("The enable switch for this struct.");
 		mPropEnabled->SetDefaultBoolean(default_enabled);
 
-		mPropDisplayColor = cfgmgr->GetProperty(category_name, "Outline Color");
+		mPropDisplayColor = cfgmgr->GetProperty(category_name, "Display Color");
 		mPropDisplayColor->SetComment("The display color of this struct. Support both #rrggbbaa and rrr,ggg,bbb,aaa format. Alpha factor is optional. First is Hex style and second is Dec style.");
 		mPropDisplayColor->SetDefaultString(default_color);
 	}
@@ -41,9 +41,22 @@ namespace NSBallanceBBOR {
 	}
 
 
-	StructDisplayCfg::StructDisplayCfg(IConfig* cfgmgr) : mStructCfgs(), mCfgMgr(cfgmgr) {}
+	StructDisplayCfg::StructDisplayCfg(IConfig* cfgmgr) : mStructCfgs(), mCfgMgr(cfgmgr), mPropGlobalEnabled(nullptr) {
+		// Register global options first
+		mCfgMgr->SetCategoryComment("Global", "The global switch of this mod.");
+		mPropGlobalEnabled = mCfgMgr->GetProperty("Global", "Enabled");
+		mPropGlobalEnabled->SetComment("The enable switch for global scope.");
+		mPropGlobalEnabled->SetDefaultBoolean(false);
+
+		// then register other options
+		RegisterProps();
+	}
 
 	StructDisplayCfg::~StructDisplayCfg() {}
+
+	bool StructDisplayCfg::IsGlobalEnabled() {
+		return mPropGlobalEnabled->GetBoolean();
+	}
 
 	void StructDisplayCfg::RegisterProps() {
 		mStructCfgs.emplace(BallanceStructType::DepthCubes, StructDisplayCfgItem(mCfgMgr, "DepthCubes", "The area that ball lost when touching.", true, "#ff0000"));

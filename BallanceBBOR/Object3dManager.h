@@ -8,11 +8,36 @@ namespace NSBallanceBBOR {
 
 	class Object3dManager {
 	public:
-		Object3dManager();
+		Object3dManager(CKContext* ctx, ILogger* logger, StructDisplayCfg* cfgmgr);
 		~Object3dManager();
 
+		void EnterLevel();
+		void ExitLevel();
+		void SyncSettings();
+
 	private:
+		// ===== Basic Member =====
+
+		CKContext* mCtx;
+		StructDisplayCfg* mStructCfgManager;
+		ILogger* mLogger;
+		
+		// ===== Color Material =====
+
+		void UpdateColorPalette(BallanceStructType btype);
+		CKMaterial* PickColorPalette(BallanceStructType btype);
 		std::map<BallanceStructType, CKMaterial*> mColorPalette;
+		
+		// ===== 3dObject Manager =====
+
+		void SetObjectListVisibility(std::vector<CK3dObject*>& ls, BallanceStructType btype);
+
+		// Transformer
+
+		void CreateTransformerList();
+		void DestroyTransformerList();
+		CKMesh* mTransformerMesh;
+		std::vector<CK3dObject*> mTransformerObjs;
 	};
 
 }

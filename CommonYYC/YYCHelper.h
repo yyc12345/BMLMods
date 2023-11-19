@@ -89,25 +89,6 @@ namespace YYCHelper {
 		*/
 		XSObjectPointerArray* CKBehaviorIO_GetLinks(CKBehaviorIO* that);
 
-		/**
-		 * @brief Returns the color in a DWORD in the 32 bit format ARGB and sets alpha to 255
-		 * @param that[in] The color.
-		 * @remark
-		 * BML does not implement the whole VxColor. but BMLP does.
-		 * So we patch it for BML because we need use it.
-		 * @return The ARGB color.
-		*/
-		CKDWORD VxColor_GetRGB(const VxColor& that);
-		/**
-		 * @brief Returns the color in a DWORD in the 32 bit format ARGB.
-		 * @param that[in] The color.
-		 * @remark
-		 * BML does not implement the whole VxColor. but BMLP does.
-		 * So we patch it for BML because we need use it.
-		 * @return The ARGB color.
-		*/
-		CKDWORD VxColor_GetRGBA(const VxColor& that);
-
 	}
 
 	namespace ModEvents {

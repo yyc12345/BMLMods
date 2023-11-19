@@ -102,10 +102,10 @@ void FontCraft::OnLoad() {
 		Gdiplus::Font ft(inputWChar.c_str(), m_core_props[2]->GetFloat(), (FontStyle)fs, Gdiplus::UnitPixel);
 
 		VxColor fontColor;
-		YYCHelper::ColorStringParser::ParseColorString(
-			m_core_props[6]->GetString(), fontColor
-		);
-		Gdiplus::Color gdiFontColor(static_cast<Gdiplus::ARGB>(YYCHelper::BMLPatches::VxColor_GetRGB(fontColor)));
+		if (!YYCHelper::ColorStringParser::ParseColorString(m_core_props[6]->GetString(), fontColor)) {
+			GetLogger()->Info("Parsing color string failed: \"%s\". use default color.", m_core_props[6]->GetString());
+		}
+		Gdiplus::Color gdiFontColor(static_cast<Gdiplus::ARGB>(fontColor.GetRGBA()));
 		Gdiplus::SolidBrush sb(gdiFontColor);
 
 		Gdiplus::StringFormat sf(Gdiplus::StringFormat::GenericTypographic());

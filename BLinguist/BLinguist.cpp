@@ -138,7 +138,7 @@ void BLinguist::GetFontCraftSettingsCallback(std::nullptr_t t, FontCraftSettings
 	mLaunchSettings.FontName = settings.mFontName;
 	mLaunchSettings.FontSize = (int)(settings.mFontSize / 2.0f);
 	// apply font color
-	mLaunchSettings.FontColor = YYCHelper::BMLPatches::VxColor_GetRGB(settings.mFontColor);
+	mLaunchSettings.FontColor = settings.mFontColor.GetRGBA();
 
 	GetLogger()->Info("Communicate with FontCraft success! Font name: \"%s\". Font size: %d. Font color (ARGB): 0x%08x.", 
 		mLaunchSettings.FontName.c_str(), mLaunchSettings.FontSize, mLaunchSettings.FontColor);
