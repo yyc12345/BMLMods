@@ -32,6 +32,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CommonYYC", "CommonYYC\CommonYYC.vcxproj", "{09AD0BF0-61A3-4AA0-ACC6-2EF6576ACE0D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BallanceBBOR", "BallanceBBOR\BallanceBBOR.vcxproj", "{93114994-9078-49E7-99DD-03C23A353AE0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{09AD0BF0-61A3-4AA0-ACC6-2EF6576ACE0D} = {09AD0BF0-61A3-4AA0-ACC6-2EF6576ACE0D}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
