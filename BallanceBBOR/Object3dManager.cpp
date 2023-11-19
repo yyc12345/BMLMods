@@ -66,17 +66,22 @@ namespace NSBallanceBBOR {
 
 		// update mtl color
 		mtl->SetDiffuse(color);
+		mtl->SetEmissive(color);
 		// set alpha if needed
 		if (color.a != 1.0f) {
+			mtl->SetTwoSided(TRUE);
+
 			// Copy from SpiritTrial
 			mtl->EnableAlphaBlend();
 			mtl->SetSourceBlend(VXBLEND_SRCALPHA);
 			mtl->SetDestBlend(VXBLEND_INVSRCALPHA);
+
 			// Copy from LaternFader
 			mtl->EnableAlphaTest();
 			mtl->SetAlphaFunc(VXCMP_GREATEREQUAL);
 			mtl->SetAlphaRef(0);
 		} else {
+			mtl->SetTwoSided(FALSE);
 			mtl->EnableAlphaBlend(FALSE);
 			mtl->EnableAlphaTest(FALSE);
 		}
@@ -94,7 +99,7 @@ namespace NSBallanceBBOR {
 		if (mStructCfgManager->IsGlobalEnabled()) {
 			StructDisplayCfgItem* cfg = mStructCfgManager->GetCfgItem(btype);
 			if (cfg == nullptr) return;
-			bool is_visible = cfg->IsEnabled();
+			is_visible = cfg->IsEnabled();
 		}
 
 		// process list

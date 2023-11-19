@@ -3,6 +3,10 @@
 
 namespace NSBallanceBBOR::MeshCreator {
 
+	// MARK: i don't know why, but it seems that Virtools use CW (clockwise), not CCW (counter-clockerwise) to check face normal.
+	// But all evidence show that Virtools should be CCW one. That is insane.
+	// So i was forced reset all face as CW order.
+
 #pragma region Help Functions
 
 	constexpr float YYC_PI = std::numbers::pi_v<float>;
@@ -25,6 +29,7 @@ namespace NSBallanceBBOR::MeshCreator {
 	 * @param mesh[in] Mesh to be notified.
 	*/
 	static void OrderUpdateMesh(CKMesh* mesh) {
+		mesh->VertexMove();
 		mesh->NormalChanged();
 		mesh->UVChanged();
 	}
@@ -77,10 +82,10 @@ namespace NSBallanceBBOR::MeshCreator {
 		int pxpz_face_idx = face_base,
 			nxnz_face_idx = face_base + 1;
 
-		mesh->SetFaceVertexIndex(pxpz_face_idx, pxpz_idx, nxpz_idx, pxnz_idx);
+		mesh->SetFaceVertexIndex(pxpz_face_idx, pxpz_idx, pxnz_idx, nxpz_idx);
 		mesh->SetFaceMaterial(pxpz_face_idx, mtl);
 
-		mesh->SetFaceVertexIndex(nxnz_face_idx, nxnz_idx, pxnz_idx, nxpz_idx);
+		mesh->SetFaceVertexIndex(nxnz_face_idx, nxnz_idx, nxpz_idx, pxnz_idx);
 		mesh->SetFaceMaterial(nxnz_face_idx, mtl);
 
 		// notify changes
@@ -121,17 +126,19 @@ namespace NSBallanceBBOR::MeshCreator {
 		// assign other vertex
 		// we draw ring from top to bottom (+y -> -y).
 		// and draw segment from +x -> +z -> -x -> -z.
-		float frings = static_cast<float>(rings),
+		float frings = static_cast<float>(rings + 1),
 			fsegments = static_cast<float>(segments);
 		int idx = other_vtx_start;
 		for (int iring = 0; iring < rings; ++iring) {
 			for (int iseg = 0; iseg < segments; ++iseg) {
 				// set vertex position
 				// ring control the y data and segment control xz data
+				float sphere_theta = (iring + 1) / frings * YYC_PI,
+					sphere_phi = (iseg / fsegments) * YYC_2PI;
 				cache.Set(
-					std::cos((iseg / fsegments) * YYC_2PI) * radius * std::sin((iring / frings) * YYC_PI),
-					std::cos((iring / frings) * YYC_PI) * radius,
-					std::sin((iseg / fsegments) * YYC_2PI) * radius * std::sin((iring / frings) * YYC_PI)
+					std::cos(sphere_phi) * radius * std::sin(sphere_theta),
+					std::cos(sphere_theta) * radius,
+					std::sin(sphere_phi) * radius * std::sin(sphere_theta)
 				);
 				mesh->SetVertexPosition(idx, &cache);
 
@@ -177,11 +184,11 @@ namespace NSBallanceBBOR::MeshCreator {
 				bottom_line_next_vtx = bottom_line_start + NotRobustCircularIndex(iseg + 1, segments);
 
 			// create top face
-			mesh->SetFaceVertexIndex(top_face_start + iseg, top_vtx_idx, top_line_this_vtx, top_line_next_vtx);
+			mesh->SetFaceVertexIndex(top_face_start + iseg, top_vtx_idx, top_line_next_vtx, top_line_this_vtx);
 			mesh->SetFaceMaterial(top_face_start + iseg, mtl);
 
 			// create bottom face
-			mesh->SetFaceVertexIndex(bottom_face_start + iseg, bottom_vtx_idx, bottom_line_next_vtx, bottom_line_this_vtx);
+			mesh->SetFaceVertexIndex(bottom_face_start + iseg, bottom_vtx_idx, bottom_line_this_vtx, bottom_line_next_vtx);
 			mesh->SetFaceMaterial(bottom_face_start + iseg, mtl);
 		}
 
@@ -201,10 +208,10 @@ namespace NSBallanceBBOR::MeshCreator {
 					next_line_next_vtx = next_line_start + NotRobustCircularIndex(iseg + 1, segments);
 
 				// create top-left triangle
-				mesh->SetFaceVertexIndex(idx, this_line_this_vtx, next_line_this_vtx, this_line_next_vtx);
+				mesh->SetFaceVertexIndex(idx, this_line_this_vtx, this_line_next_vtx, next_line_this_vtx);
 				mesh->SetFaceMaterial(idx, mtl);
 				++idx;
-				mesh->SetFaceVertexIndex(idx, this_line_next_vtx, next_line_this_vtx, next_line_next_vtx);
+				mesh->SetFaceVertexIndex(idx, this_line_next_vtx, next_line_next_vtx, next_line_this_vtx);
 				mesh->SetFaceMaterial(idx, mtl);
 				++idx;
 			}
