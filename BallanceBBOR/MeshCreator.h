@@ -5,9 +5,24 @@
 namespace NSBallanceBBOR::MeshCreator {
 
 	/**
+	 * @brief Transform the whole mesh.
+	 * @param mesh[in] The mesh to be transformed
+	 * @param mat[in] Transform matrix.
+	*/
+	void TransformMesh(CKMesh* mesh, const VxMatrix& mat);
+
+	/**
+	 * @brief Add a cube shape to mesh.
+	 * @param mesh[in] The mesh to add geomery.
+	 * @param mtl[in] The mtl used for drawing this geometry.
+	 * @param size[in] The edge length of this cube.
+	*/
+	void CreateCube(CKMesh* mesh, CKMaterial* mtl, float size);
+
+	/**
 	 * @brief Add a plane (square rectangle) shape to mesh. The face normal will point to +Y.
 	 * @param mesh[in] The mesh to add geomery.
-	 * @param mtl[in] The mtl used for drawing this sphere.
+	 * @param mtl[in] The mtl used for drawing this geometry.
 	 * @param size[in] The edge length of this square.
 	*/
 	void CreatePlane(CKMesh* mesh, CKMaterial* mtl, float size);

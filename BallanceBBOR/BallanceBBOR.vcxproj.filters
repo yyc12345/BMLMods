@@ -27,6 +27,9 @@
     <ClInclude Include="MeshCreator.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MatrixBuilder.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BallanceBBOR.cpp">
@@ -39,6 +42,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MeshCreator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixBuilder.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -38,6 +38,14 @@ namespace NSBallanceBBOR {
 		void DestroyTransformerList();
 		CKMesh* mTransformerMesh;
 		std::vector<CK3dObject*> mTransformerObjs;
+
+		// Ventilator Active Area
+		void CreateVentilatorList();
+		void DestroyVentilatorList();
+		CKMesh* mVentilatorActiveAreaMesh;
+		std::vector<CK3dObject*> mVentilatorActiveAreaObjs;
+
+
 	};
 
 }
