@@ -41,7 +41,12 @@ namespace NSBallanceBBOR {
 	void Object3dManager::SyncSettings() {
 		// sync color platte
 		UpdateColorPalette(BallanceStructType::Transformer);
-
+		// special treat for some material
+		// ventilator deactive plane should be rendered as two sided always.
+		CKMaterial* spec_mtl = nullptr;
+		spec_mtl = PickColorPalette(BallanceStructType::VentilatorDeactivePlane);
+		if (spec_mtl) spec_mtl->SetTwoSided(TRUE);
+		
 		// sync enable status
 		SetObjectListVisibility(mTransformerObjs, BallanceStructType::Transformer);
 	}

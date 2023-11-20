@@ -19,16 +19,16 @@ jobs:
     steps:
     - name: Fetching Repository
       uses: actions/checkout@v3
-    - name: Downloading BML Dev Package
-      uses: robinraju/release-downloader@v1.3
-      with:
-        repository: "yyc12345/BallanceModLoader"
-        latest: false
-        tag: "0.3.43"
-        fileName: "BML-0.3.43-dev.zip"
-        tarBall: false
-        zipBall: false
-        out-file-path: "dev_package"
+    # - name: Downloading BML Dev Package
+    #   uses: robinraju/release-downloader@v1.3
+    #   with:
+    #     repository: "yyc12345/BallanceModLoader"
+    #     latest: false
+    #     tag: "0.3.43"
+    #     fileName: "BML-0.3.43-dev.zip"
+    #     tarBall: false
+    #     zipBall: false
+    #     out-file-path: "dev_package"
     - name: Downloading BMLPlus Dev Package
       uses: robinraju/release-downloader@v1.3
       with:
@@ -39,20 +39,23 @@ jobs:
         tarBall: false
         zipBall: false
         out-file-path: "dev_package"
-    - name: Decompressing Dev Packages
+    # - name: Decompressing BML Dev Packages
+    #   shell: powershell
+    #   run: |
+    #     Expand-Archive -Path 'dev_package\BML-0.3.43-dev.zip' -DestinationPath 'bml_dev'
+    - name: Decompressing BMLPlus Dev Packages
       shell: powershell
       run: |
-        Expand-Archive -Path 'dev_package\BML-0.3.43-dev.zip' -DestinationPath 'bml_dev'
         Expand-Archive -Path 'dev_package\BMLP-0.2.3-dev.zip' -DestinationPath 'bmlp_dev'
-    - name: Building BML Mods
-      shell: cmd
-      run: |
-        py github_action_gen_props.py -t BML -p bml_output -s ".bmod" -i bml_dev/include -l bml_dev/lib/Release -n BML.lib
-        set VS=${{ matrix.vs }}
-        set VCVARS="C:\Program Files (x86)\Microsoft Visual Studio\%VS%\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
-        if not exist %VCVARS% set VCVARS="C:\Program Files\Microsoft Visual Studio\%VS%\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
-        call %VCVARS% ${{ matrix.msvc_arch }}
-        MSBuild BMLMods.sln -p:Configuration=Release -p:Platform=x86
+    # - name: Building BML Mods
+    #   shell: cmd
+    #   run: |
+    #     py github_action_gen_props.py -t BML -p bml_output -s ".bmod" -i bml_dev/include -l bml_dev/lib/Release -n BML.lib
+    #     set VS=${{ matrix.vs }}
+    #     set VCVARS="C:\Program Files (x86)\Microsoft Visual Studio\%VS%\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
+    #     if not exist %VCVARS% set VCVARS="C:\Program Files\Microsoft Visual Studio\%VS%\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
+    #     call %VCVARS% ${{ matrix.msvc_arch }}
+    #     MSBuild BMLMods.sln -p:Configuration=Release -p:Platform=x86
     - name: Building BMLPlus Mods
       shell: cmd
       run: |
@@ -62,12 +65,12 @@ jobs:
         if not exist %VCVARS% set VCVARS="C:\Program Files\Microsoft Visual Studio\%VS%\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
         call %VCVARS% ${{ matrix.msvc_arch }}
         MSBuild BMLMods.sln -p:Configuration=Release -p:Platform=x86
-    - name: Uploading BML Nightly Build
-      uses: actions/upload-artifact@v3
-      with:
-        name: BMLMods-nightly
-        path: bml_output/*.bmod
-        retention-days: 30
+    # - name: Uploading BML Nightly Build
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: BMLMods-nightly
+    #     path: bml_output/*.bmod
+    #     retention-days: 30
     - name: Uploading BMLPlus Nightly Build
       uses: actions/upload-artifact@v3
       with:

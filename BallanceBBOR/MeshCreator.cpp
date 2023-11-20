@@ -42,6 +42,8 @@ namespace NSBallanceBBOR::MeshCreator {
 		VxVector cache;
 		// regulate size
 		if (size <= 0.0f) size = 5.0f;
+		// shrink size to half size.
+		size /= 2.0f;
 
 		// create 4 vector.
 		// we created plane is in XZ plane.
@@ -156,12 +158,12 @@ namespace NSBallanceBBOR::MeshCreator {
 		// first, top and bottom face is pure triangle and have `2 * segments` faces.
 		// second, the amid between top and bottom face is the rectangle face created by rings and segments.
 		// each rectangle face will be splited into 2 triangle faces.
-		// and we have rectangle face `(rings - 2) * segments`
+		// and we have rectangle face `(rings - 1) * segments`
 		// so we have triangle face double of it.
 		int face_base = mesh->GetFaceCount();
 		int top_face_count = segments,
 			bottom_face_count = segments,
-			other_face_count = ((rings - 2) * segments) * 2;
+			other_face_count = ((rings - 1) * segments) * 2;
 		mesh->SetFaceCount(
 			face_base +
 			top_face_count + bottom_face_count +
