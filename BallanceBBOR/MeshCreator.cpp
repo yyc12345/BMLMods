@@ -47,10 +47,10 @@ namespace NSBallanceBBOR::MeshCreator {
 		// prepare 2 processing cahce variables.
 		VxVector get_val, set_val;
 
-		// prepare normal used origin.
-		static VxVector zero(0.0f, 0.0f, 0.0f);
-		VxVector nml_origin;
-		Vx3DMultiplyMatrixVector(&nml_origin, mat, &zero);
+		// prepare normal used matrix.
+		// https://zhuanlan.zhihu.com/p/96717729
+		MatrixBuilder builder;
+		VxMatrix nml_mat(builder.Set(mat).Inverse().Transpose().Build());
 
 		// process vertex in range
 		for (int i = 0; i < vtx_count; ++i) {
@@ -63,8 +63,7 @@ namespace NSBallanceBBOR::MeshCreator {
 
 			// transform normal
 			mesh->GetVertexNormal(idx, &get_val);
-			Vx3DMultiplyMatrixVector(&set_val, mat, &get_val);
-			set_val -= nml_origin;	// set_val = set_val - nml_origin
+			Vx3DMultiplyMatrixVector(&set_val, nml_mat, &get_val);
 			set_val.Normalize();
 			mesh->SetVertexNormal(idx, &set_val);
 		}
@@ -84,12 +83,12 @@ namespace NSBallanceBBOR::MeshCreator {
 		// create cube use plane creator and vertex transfomer to create 6 face of this geometry
 		// prepare 6 faces matrix
 		MatrixBuilder builder;
-		VxMatrix px(builder.Scale(size, size, size).RotateWithEulerAngles(0, 0, 90).Move(halfsize, 0, 0).Build());
-		VxMatrix pz(builder.Scale(size, size, size).RotateWithEulerAngles(-90, 0, 0).Move(0, 0, halfsize).Build());
-		VxMatrix nx(builder.Scale(size, size, size).RotateWithEulerAngles(0, 0, -90).Move(-halfsize, 0, 0).Build());
-		VxMatrix nz(builder.Scale(size, size, size).RotateWithEulerAngles(90, 0, 0).Move(0, 0, -halfsize).Build());
-		VxMatrix py(builder.Scale(size, size, size).Move(0, halfsize, 0).Build());
-		VxMatrix ny(builder.Scale(size, size, size).RotateWithEulerAngles(180, 0, 0).Move(0, -halfsize, 0).Build());
+		VxMatrix px(builder.Scale(size, 1, size).RotateWithEulerAngles(0, 0, -90).Move(halfsize, 0, 0).Build());
+		VxMatrix pz(builder.Scale(size, 1, size).RotateWithEulerAngles(90, 0, 0).Move(0, 0, halfsize).Build());
+		VxMatrix nx(builder.Scale(size, 1, size).RotateWithEulerAngles(0, 0, 90).Move(-halfsize, 0, 0).Build());
+		VxMatrix nz(builder.Scale(size, 1, size).RotateWithEulerAngles(-90, 0, 0).Move(0, 0, -halfsize).Build());
+		VxMatrix py(builder.Scale(size, 1, size).Move(0, halfsize, 0).Build());
+		VxMatrix ny(builder.Scale(size, 1, size).RotateWithEulerAngles(180, 0, 0).Move(0, -halfsize, 0).Build());
 
 		static std::array<VxMatrix*, 6> face_mats {
 			&px, &pz, &nx, &nz, &py, &ny
@@ -104,51 +103,8 @@ namespace NSBallanceBBOR::MeshCreator {
 			vtx_base += vtx_per_pace;
 		}
 
-		//// create cube use plane creator and vertex transfomer to create 6 face of this geometry
-		//// prepare 6 faces matrix
-		//static float raw_px[4][4] = {7.549790e-08f, -1.0f, 0.0f, 0.0f, 1.0f, 7.549790e-08f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 5.000000e-01f, 0.0f, 0.0f, 1.0f};
-		//static VxMatrix px(raw_px);
-		//static float raw_pz[4][4] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -4.371139e-08f, 1.0f, 0.0f, 0.0f, -1.0f, -4.371139e-08f, 0.0f, 0.0f, 0.0f, 5.000000e-01f, 1.0f};
-		//static VxMatrix pz(raw_pz);
-		//static float raw_nx[4][4] = {7.549790e-08f, 1.0f, 0.0f, 0.0f, -1.0f, 7.549790e-08f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -5.000000e-01f, 0.0f, 0.0f, 1.0f};
-		//static VxMatrix nx(raw_nx);
-		//static float raw_nz[4][4] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -4.371139e-08f, -1.0f, 0.0f, 0.0f, 1.0f, -4.371139e-08f, 0.0f, 0.0f, 0.0f, -5.000000e-01f, 1.0f};
-		//static VxMatrix nz(raw_nz);
-		//static float raw_py[4][4] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 5.000000e-01f, 0.0f, 1.0f};
-		//static VxMatrix py(raw_py);
-		//static float raw_ny[4][4] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 3.258414e-07f, 0.0f, 0.0f, -3.258414e-07f, -1.0f, 0.0f, 0.0f, -5.000000e-01f, 0.0f, 1.0f};
-		//static VxMatrix ny(raw_ny);
-
-		//static std::array<VxMatrix*, 6> face_mats {
-		//	&px, &pz, &nx, &nz, &py, &ny
-		//};
-
-		//// create face
-		//static int vtx_per_pace = 4;
-		//int vtx_base = 0;
-		//for (const auto* pmat : face_mats) {
-		//	CreatePlane(mesh, mtl, 1.0f);
-		//	TransformVertexRange(mesh, *pmat, vtx_base, vtx_per_pace);
-		//	vtx_base += vtx_per_pace;
-		//}
-
-		//// construct scale mat
-		//// because we created is standard 1x1x1 cube.
-		//// we need re-scale it to expected size.
-		//if (size != 1.0f) {
-		//	float raw_rescale[4][4] = {
-		//		size, 0.0f, 0.0f, 0.0f, 
-		//		0.0f, size, 0.0f, 0.0f, 
-		//		0.0f, 0.0f, size, 0.0f, 
-		//		0.0f, 0.0f, 0.0f, 1.0f
-		//	};
-		//	VxMatrix rescale(raw_rescale);
-
-		//	// after process, vtx_base is the count of all vertex
-		//	// so we use it directly.
-		//	TransformVertexRange(mesh, rescale, 0, vtx_base);
-		//}
-
+		// notify changes
+		OrderUpdateMesh(mesh);
 	}
 
 	void CreatePlane(CKMesh* mesh, CKMaterial* mtl, float size) {

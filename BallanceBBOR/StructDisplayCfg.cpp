@@ -62,7 +62,7 @@ namespace NSBallanceBBOR {
 		mStructCfgs.emplace(BallanceStructType::DepthCubes, StructDisplayCfgItem(mCfgMgr, "DepthCubes", "The area that ball lost when touching.", true, "#ff0000"));
 		mStructCfgs.emplace(BallanceStructType::Transformer, StructDisplayCfgItem(mCfgMgr, "Transformer", "The transformer active attracting area.", true, "#ff7f00"));
 		mStructCfgs.emplace(BallanceStructType::VentilatorActiveArea, StructDisplayCfgItem(mCfgMgr, "VentilatorActiveArea", "The area that ventilator can add force to ball.", true, "#007fff"));
-		mStructCfgs.emplace(BallanceStructType::VentilatorDeactivePlane, StructDisplayCfgItem(mCfgMgr, "VentilatorDeactivePlane", "The plane that ventilator retreat added force.", true, "#0000ff"));
+		mStructCfgs.emplace(BallanceStructType::VentilatorDeactiveArea, StructDisplayCfgItem(mCfgMgr, "VentilatorDeactiveArea", "The plane that ventilator retreat added force.", false, "#0000ff7f"));
 		mStructCfgs.emplace(BallanceStructType::PhysHiddenFloor, StructDisplayCfgItem(mCfgMgr, "PhysHiddenFloor", "The hidden object physicalized as floor.", true, "#ffff00"));
 		mStructCfgs.emplace(BallanceStructType::PhysHiddenStopper, StructDisplayCfgItem(mCfgMgr, "PhysHiddenStopper", "The hidden object physicalized as stopper.", false, "#00ff00"));
 	}

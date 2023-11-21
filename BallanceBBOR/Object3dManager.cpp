@@ -1,5 +1,6 @@
 #include "Object3dManager.h"
 #include "MeshCreator.h"
+#include "MatrixBuilder.h"
 #include <array>
 
 namespace NSBallanceBBOR {
@@ -7,19 +8,48 @@ namespace NSBallanceBBOR {
 	Object3dManager::Object3dManager(CKContext* ctx, ILogger* logger, StructDisplayCfg* cfgmgr) :
 		mCtx(ctx), mLogger(logger), mStructCfgManager(cfgmgr),
 		mColorPalette(),
-		mTransformerMesh(nullptr), mTransformerObjs()
-	{
-		// sync settings to self first to create all color platte 
-		// (and sync enabled status, but it is vain)
-		SyncSettings();
+		mTransformerMesh(nullptr), mTransformerObjs(),
+		mVentilatorActiveAreaMesh(nullptr), mVentilatorDeactiveAreaMesh(nullptr), mVentilatorActiveAreaObjs(), mVentilatorDeactiveAreaObjs() {
 
-		// create mesh
+		// sync settings to self first to create all color platte
+		SyncColors();
+
+		// create matrix builder
+		MatrixBuilder builder;
+		// create transform mesh
 		mTransformerMesh = static_cast<CKMesh*>(mCtx->CreateObject(CKCID_MESH));
 		MeshCreator::CreateSphere(
 			mTransformerMesh,
 			PickColorPalette(BallanceStructType::Transformer),
 			16, 8, 2.3f
 		);
+		// create ventilator active area mesh
+		mVentilatorActiveAreaMesh = static_cast<CKMesh*>(mCtx->CreateObject(CKCID_MESH));
+		MeshCreator::CreateCube(
+			mVentilatorActiveAreaMesh,
+			PickColorPalette(BallanceStructType::VentilatorActiveArea),
+			1.0f
+		);
+		MeshCreator::TransformMesh(
+			mVentilatorActiveAreaMesh,
+			builder
+			.Scale(2, 16, 2).Move(0, 8, 0)	// resize to its mesh size
+			.Move(0, 1.1399f, -0.000588f).RotateWithEulerAngles(0.150428f, 0.000057f, 0)	// add `P_Modul_18_Kollisionsquader` extra offset.
+			.Build()
+		);
+		// create ventilator deactive area mesh
+		mVentilatorDeactiveAreaMesh = static_cast<CKMesh*>(mCtx->CreateObject(CKCID_MESH));
+		MeshCreator::CreateSphere(
+			mVentilatorDeactiveAreaMesh,
+			PickColorPalette(BallanceStructType::VentilatorDeactiveArea),
+			16, 8, 7.0f
+		);
+
+		CKFile* fs = mCtx->CreateCKFile();
+		fs->StartSave("test.nmo");
+		fs->SaveObject(mVentilatorActiveAreaMesh);
+		fs->EndSave();
+		mCtx->DeleteCKFile(fs);
 
 	}
 
@@ -31,24 +61,35 @@ namespace NSBallanceBBOR {
 	void Object3dManager::EnterLevel() {
 		// create all objects
 		CreateTransformerList();
+		CreateVentilatorList();
+		// set enabled because object is displayed in default.
+		SyncEnabled();
 	}
 
 	void Object3dManager::ExitLevel() {
 		// clear all objects
 		DestroyTransformerList();
+		DestroyVentilatorList();
 	}
 
 	void Object3dManager::SyncSettings() {
+		// both color and enable sync
+		SyncColors();
+		SyncEnabled();
+	}
+
+	void Object3dManager::SyncColors() {
 		// sync color platte
 		UpdateColorPalette(BallanceStructType::Transformer);
-		// special treat for some material
-		// ventilator deactive plane should be rendered as two sided always.
-		CKMaterial* spec_mtl = nullptr;
-		spec_mtl = PickColorPalette(BallanceStructType::VentilatorDeactivePlane);
-		if (spec_mtl) spec_mtl->SetTwoSided(TRUE);
-		
+		UpdateColorPalette(BallanceStructType::VentilatorActiveArea);
+		UpdateColorPalette(BallanceStructType::VentilatorDeactiveArea);
+	}
+
+	void Object3dManager::SyncEnabled() {
 		// sync enable status
 		SetObjectListVisibility(mTransformerObjs, BallanceStructType::Transformer);
+		SetObjectListVisibility(mVentilatorActiveAreaObjs, BallanceStructType::VentilatorActiveArea);
+		SetObjectListVisibility(mVentilatorDeactiveAreaObjs, BallanceStructType::VentilatorDeactiveArea);
 	}
 
 	void Object3dManager::UpdateColorPalette(BallanceStructType btype) {
@@ -133,7 +174,7 @@ namespace NSBallanceBBOR {
 				CKBeObject* beobj = ckgp->GetObjectA(i);
 				if (!CKIsChildClassOf(beobj, CKCID_3DENTITY)) continue;
 				VxMatrix world_matrix(static_cast<CK3dEntity*>(beobj)->GetWorldMatrix());
-				
+
 				// create new one and apply
 				CK3dObject* showcase = static_cast<CK3dObject*>(mCtx->CreateObject(CKCID_3DOBJECT));
 				showcase->SetCurrentMesh(mTransformerMesh);
@@ -151,6 +192,52 @@ namespace NSBallanceBBOR {
 			mCtx->DestroyObject(obj);
 		}
 		mTransformerObjs.clear();
+	}
+
+	void Object3dManager::CreateVentilatorList() {
+		DestroyTransformerList();
+		CKScene* active_scene = mCtx->GetCurrentLevel()->GetLevelScene();
+
+		// get by group
+		CKGroup* ckgp = static_cast<CKGroup*>(mCtx->GetObjectByNameAndClass("P_Modul_18", CKCID_GROUP));
+		if (ckgp == nullptr) return;
+		int count = ckgp->GetObjectCount();
+		for (int i = 0; i < count; ++i) {
+			// try get world matrix
+			CKBeObject* beobj = ckgp->GetObjectA(i);
+			if (!CKIsChildClassOf(beobj, CKCID_3DENTITY)) continue;
+			VxMatrix world_matrix(static_cast<CK3dEntity*>(beobj)->GetWorldMatrix());
+			VxVector world_position;
+			static_cast<CK3dEntity*>(beobj)->GetPosition(&world_position);
+
+			// create new one and apply
+			CK3dObject* active_showcase = static_cast<CK3dObject*>(mCtx->CreateObject(CKCID_3DOBJECT));
+			active_showcase->SetCurrentMesh(mVentilatorActiveAreaMesh);
+			active_showcase->SetWorldMatrix(world_matrix);
+			active_scene->AddObjectToScene(active_showcase);
+			// add into list
+			mVentilatorActiveAreaObjs.emplace_back(active_showcase);
+
+			// create new one and apply
+			CK3dObject* deactive_showcase = static_cast<CK3dObject*>(mCtx->CreateObject(CKCID_3DOBJECT));
+			deactive_showcase->SetCurrentMesh(mVentilatorDeactiveAreaMesh);
+			deactive_showcase->SetPosition(world_position);
+			active_scene->AddObjectToScene(deactive_showcase);
+			// add into list
+			mVentilatorDeactiveAreaObjs.emplace_back(deactive_showcase);
+		}
+	}
+
+	void Object3dManager::DestroyVentilatorList() {
+		for (auto* obj : mVentilatorActiveAreaObjs) {
+			mCtx->DestroyObject(obj);
+		}
+		mVentilatorActiveAreaObjs.clear();
+
+		for (auto* obj : mVentilatorDeactiveAreaObjs) {
+			mCtx->DestroyObject(obj);
+		}
+		mVentilatorDeactiveAreaObjs.clear();
 	}
 
 }

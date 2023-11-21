@@ -9,7 +9,7 @@ namespace NSBallanceBBOR {
 		DepthCubes,
 		Transformer,
 		VentilatorActiveArea,
-		VentilatorDeactivePlane,
+		VentilatorDeactiveArea,
 		PhysHiddenFloor,
 		PhysHiddenStopper
 	};

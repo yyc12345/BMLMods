@@ -21,6 +21,9 @@ namespace NSBallanceBBOR {
 		CKContext* mCtx;
 		StructDisplayCfg* mStructCfgManager;
 		ILogger* mLogger;
+
+		void SyncColors();
+		void SyncEnabled();
 		
 		// ===== Color Material =====
 
@@ -39,11 +42,11 @@ namespace NSBallanceBBOR {
 		CKMesh* mTransformerMesh;
 		std::vector<CK3dObject*> mTransformerObjs;
 
-		// Ventilator Active Area
+		// Ventilator
 		void CreateVentilatorList();
 		void DestroyVentilatorList();
-		CKMesh* mVentilatorActiveAreaMesh;
-		std::vector<CK3dObject*> mVentilatorActiveAreaObjs;
+		CKMesh* mVentilatorActiveAreaMesh, *mVentilatorDeactiveAreaMesh;
+		std::vector<CK3dObject*> mVentilatorActiveAreaObjs, mVentilatorDeactiveAreaObjs;
 
 
 	};
