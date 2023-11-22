@@ -165,6 +165,173 @@ namespace NSBallanceBBOR::MeshCreator {
 		OrderUpdateMesh(mesh);
 	}
 
+	void CreateCircle(CKMesh* mesh, CKMaterial* mtl, int segments, float radius) {
+		// create cahce
+		VxVector cache;
+		// regulate segments
+		if (segments < 3) segments = 3;
+		// regulate radius
+		if (radius <= 0.0f) radius = 5.0f;
+
+
+		// get vertex size and resize
+		int vertex_base = mesh->GetVertexCount();
+		mesh->SetVertexCount(vertex_base + 1 + segments);	// 1 is center vertex.
+
+		// calc some offset
+		int center_vtx_idx = vertex_base,
+			other_vtx_start = vertex_base + 1;
+
+		// assign centervertex at first place
+		cache.Set(0, 0, 0);
+		mesh->SetVertexPosition(center_vtx_idx, &cache);
+		cache.Set(0, 1.0f, 0);
+		mesh->SetVertexNormal(center_vtx_idx, &cache);
+		mesh->SetVertexTextureCoordinates(center_vtx_idx, 0.0f, 0.0f);
+
+		// assign other vertex
+		int idx = other_vtx_start;
+		float fsegments = static_cast<float>(segments);
+		for (int iseg = 0; iseg < segments; ++iseg) {
+			// set vertex position
+			// use triangle function to compute
+			float circle_theta = iseg / fsegments * YYC_2PI;
+			cache.Set(
+				std::cos(circle_theta) * radius,
+				0.0f,
+				std::sin(circle_theta) * radius
+			);
+			mesh->SetVertexPosition(idx, &cache);
+
+			// set normal
+			cache.Set(0, 1.0f, 0);
+			mesh->SetVertexNormal(idx, &cache);
+
+			// set uv and inc index
+			mesh->SetVertexTextureCoordinates(idx, 0.0f, 0.0f);
+			++idx;
+		}
+
+		// resize face count.
+		// all faces is triangle faces, and equal with the segments count
+		int face_base = mesh->GetFaceCount();
+		mesh->SetFaceCount(face_base + segments);
+
+		// create faces
+		idx = face_base;
+		for (int iseg = 0; iseg < segments; ++iseg) {
+			// compute vertex index
+			int this_vtx = other_vtx_start + iseg,
+				next_vtx = other_vtx_start + NotRobustCircularIndex(iseg + 1, segments);
+
+			// create face
+			mesh->SetFaceVertexIndex(idx, center_vtx_idx, next_vtx, this_vtx);
+			mesh->SetFaceMaterial(idx, mtl);
+			++idx;
+		}
+
+		// notify changes
+		OrderUpdateMesh(mesh);
+	}
+
+	void CreateCylinder(CKMesh* mesh, CKMaterial* mtl, int segments, float radius, float depth, bool has_cap) {
+		// create cahce
+		VxVector cache;
+		// regulate segments
+		if (segments < 3) segments = 3;
+		// regulate radius and depth
+		if (radius <= 0.0f) radius = 5.0f;
+		if (depth <= 0.0f) depth = 1.0f;
+		// shrink depth to half size.
+		depth /= 2.0f;
+
+		// get vertex size and resize
+		int vertex_base = mesh->GetVertexCount();
+		mesh->SetVertexCount(vertex_base + segments * 2);	// we have top ring and bottom ring, so we have double segment vertices
+
+		// calc some offset
+		int top_vtx_idx = vertex_base,
+			bottom_vtx_idx = vertex_base + segments;
+
+		// assign vertex
+		float fsegments = static_cast<float>(segments);
+		for (int iseg = 0; iseg < segments; ++iseg) {
+			// compute index
+			int top_seg_idx = top_vtx_idx + iseg,
+				bottom_seg_idx = bottom_vtx_idx + iseg;
+
+			// set top ring vertex position for this segment
+			float circle_theta = iseg / fsegments * YYC_2PI;
+			cache.Set(
+				std::cos(circle_theta) * radius,
+				depth,
+				std::sin(circle_theta) * radius
+			);
+			mesh->SetVertexPosition(top_seg_idx, &cache);
+			// then invert y factor and set for bottom ring corresponding vertex
+			cache.y = -cache.y;
+			mesh->SetVertexPosition(bottom_seg_idx, &cache);
+
+			// set normal, set y to 0 and normalize to make it radiate to outside.
+			cache.y = 0.0f;
+			cache.Normalize();
+			// and set both of top and bottom rings
+			mesh->SetVertexNormal(top_seg_idx, &cache);
+			mesh->SetVertexNormal(bottom_seg_idx, &cache);
+
+			// set uv
+			mesh->SetVertexTextureCoordinates(top_seg_idx, 0.0f, 0.0f);
+			mesh->SetVertexTextureCoordinates(bottom_seg_idx, 0.0f, 0.0f);
+		}
+
+		// resize face count.
+		// all side face is rectangle faces, and it should be splitted into 2 triangle faces.
+		// we have `segments` rectangles, so we have `2 * segments` triangles.
+		int face_base = mesh->GetFaceCount();
+		mesh->SetFaceCount(face_base + 2 * segments);
+
+		// create faces
+		int idx = face_base;
+		for (int iseg = 0; iseg < segments; ++iseg) {
+			// compute vertex index
+			int top_line_this_vtx = top_vtx_idx + iseg,
+				top_line_next_vtx = top_vtx_idx + NotRobustCircularIndex(iseg + 1, segments);
+			int bottom_line_this_vtx = bottom_vtx_idx + iseg,
+				bottom_line_next_vtx = bottom_vtx_idx + NotRobustCircularIndex(iseg + 1, segments);
+
+			// create face
+			mesh->SetFaceVertexIndex(idx, top_line_this_vtx, top_line_next_vtx, bottom_line_this_vtx);
+			mesh->SetFaceMaterial(idx, mtl);
+			++idx;
+			mesh->SetFaceVertexIndex(idx, top_line_next_vtx, bottom_line_next_vtx, bottom_line_this_vtx);
+			mesh->SetFaceMaterial(idx, mtl);
+			++idx;
+		}
+
+		// create cap by CreateCircle
+		if (has_cap) {
+			// create mat builder and create top and bottom cap matrix
+			MatrixBuilder builder;
+			VxMatrix top_cap(builder.Move(0, depth, 0).Build());
+			VxMatrix bottom_cap(builder.RotateWithEulerAngles(180, 0, 0).Move(0, -depth, 0).Build());
+
+			// start create cap
+			int vtx_per_pace = segments + 1;
+			int vtx_base = mesh->GetVertexCount();
+			// create top cap
+			CreateCircle(mesh, mtl, segments, radius);
+			TransformVertexRange(mesh, top_cap, vtx_base, vtx_per_pace);
+			vtx_base += vtx_per_pace;
+			// create bottom cap
+			CreateCircle(mesh, mtl, segments, radius);
+			TransformVertexRange(mesh, bottom_cap, vtx_base, vtx_per_pace);
+			vtx_base += vtx_per_pace;
+		}
+		
+		// notify changes
+		OrderUpdateMesh(mesh);
+	}
+
 	void CreateSphere(CKMesh* mesh, CKMaterial* mtl, int segments, int rings, float radius) {
 		// create cahce
 		VxVector cache;

@@ -39,15 +39,15 @@ namespace NSBallanceBBOR {
 		);
 		// create ventilator deactive area mesh
 		mVentilatorDeactiveAreaMesh = static_cast<CKMesh*>(mCtx->CreateObject(CKCID_MESH));
-		MeshCreator::CreateSphere(
+		MeshCreator::CreateCylinder(
 			mVentilatorDeactiveAreaMesh,
 			PickColorPalette(BallanceStructType::VentilatorDeactiveArea),
-			16, 8, 7.0f
+			16, 7.0f - 5.0f, 50.0f, true
 		);
 
 		CKFile* fs = mCtx->CreateCKFile();
 		fs->StartSave("test.nmo");
-		fs->SaveObject(mVentilatorActiveAreaMesh);
+		fs->SaveObject(mVentilatorDeactiveAreaMesh);
 		fs->EndSave();
 		mCtx->DeleteCKFile(fs);
 

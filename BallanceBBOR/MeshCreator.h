@@ -28,6 +28,26 @@ namespace NSBallanceBBOR::MeshCreator {
 	void CreatePlane(CKMesh* mesh, CKMaterial* mtl, float size);
 
 	/**
+	 * @brief Add a circle shape to mesh. The circle face normal will point to +Y.
+	 * @param mesh[in] The mesh to add geomery.
+	 * @param mtl[in] The mtl used for drawing this geometry.
+	 * @param segments[in] The segment count of this circle.
+	 * @param radius[in] The height of circle.
+	*/
+	void CreateCircle(CKMesh* mesh, CKMaterial* mtl, int segments, float radius);
+
+	/**
+	 * @brief Add a cylinder shape to mesh.
+	 * @param mesh[in] The mesh to add geomery.
+	 * @param mtl[in] The mtl used for drawing this geometry.
+	 * @param segments[in] The segment count of mesh, indicateing how many vertical lines for side faces.
+	 * @param radius[in] The radius of cylinder.
+	 * @param depth[in] The height of cylinder.
+	 * @param has_cap[in] true if this cylinder need have 2 caps.
+	*/
+	void CreateCylinder(CKMesh* mesh, CKMaterial* mtl, int segments, float radius, float depth, bool has_cap);
+
+	/**
 	 * @brief Add a sphere shape to mesh.
 	 * @param mesh[in] The mesh to add geomery.
 	 * @param mtl[in] The mtl used for drawing this sphere.

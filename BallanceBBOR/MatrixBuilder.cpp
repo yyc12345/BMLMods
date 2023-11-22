@@ -3,7 +3,7 @@
 
 namespace NSBallanceBBOR {
 
-	static void fuck(VxMatrix& ret, const VxMatrix& matA, const VxMatrix& matB) {
+	static void CorrectMatrixMul(VxMatrix& ret, const VxMatrix& matA, const VxMatrix& matB) {
 		for (int i = 0; i < 4; ++i) {
 			for (int j = 0; j < 4; ++j) {
 				ret[i][j] = 0;
@@ -48,7 +48,7 @@ namespace NSBallanceBBOR {
 		cache[3][2] = z;
 		//mMat *= cache;
 		VxMatrix temp(mMat);
-		fuck(mMat, temp, cache);
+		CorrectMatrixMul(mMat, temp, cache);
 
 		return *this;
 	}
@@ -58,7 +58,7 @@ namespace NSBallanceBBOR {
 		Vx3DMatrixFromRotation(cache, axis, Degree2Rad(angle));
 		//mMat *= cache;
 		VxMatrix temp(mMat);
-		fuck(mMat, temp, cache);
+		CorrectMatrixMul(mMat, temp, cache);
 
 		return *this;
 	}
@@ -68,7 +68,7 @@ namespace NSBallanceBBOR {
 		Vx3DMatrixFromEulerAngles(cache, Degree2Rad(x), Degree2Rad(y), Degree2Rad(z));
 		//mMat *= cache;
 		VxMatrix temp(mMat);
-		fuck(mMat, temp, cache);
+		CorrectMatrixMul(mMat, temp, cache);
 
 		return *this;
 	}
@@ -86,7 +86,7 @@ namespace NSBallanceBBOR {
 		cache[2][2] = z;
 		//mMat *= cache;
 		VxMatrix temp(mMat);
-		fuck(mMat, temp, cache);
+		CorrectMatrixMul(mMat, temp, cache);
 
 		return *this;
 	}
