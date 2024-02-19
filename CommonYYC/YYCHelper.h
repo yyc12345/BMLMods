@@ -33,8 +33,8 @@ Version string is constructed by this format: `major.minor.build`
 */
 
 // VERSION DEFINE
-#define YYCMOD_VERSION_BLINGUIST "1.2.0"
-#define YYCMOD_VERSION_FONTCRAFT "4.0.0"
+#define YYCMOD_VERSION_BLINGUIST "1.3.0"
+#define YYCMOD_VERSION_FONTCRAFT "4.1.0"
 #define YYCMOD_VERSION_BASECMOCFG "1.0.1"
 #define YYCMOD_VERSION_BALLANCEOPTIFINE "1.0.1"
 #define YYCMOD_VERSION_EXTRASECTOR "1.0.1"
@@ -53,7 +53,7 @@ namespace YYCHelper {
 	namespace DpiHelper {
 		/**
 		 * @brief Convert 100% DPI font size to user DPI.
-		 * @detail See https://learn.microsoft.com/zh-cn/windows/win32/learnwin32/dpi-and-device-independent-pixels
+		 * @details See https://learn.microsoft.com/zh-cn/windows/win32/learnwin32/dpi-and-device-independent-pixels
 		 * @param ctx[in] CKContext for fetching necessary window HANDLE.
 		 * @param old_font_size[in] The font size input.
 		 * @return A new font size with int type rescaled by Windows DPI settings.
