@@ -63,7 +63,7 @@ void BLinguist::OnLoad() {
 	// load other settings
 	mLaunchSettings.mEnabled = mCfgCore_Enabled->GetBoolean();
 	mLaunchSettings.FontName = mCfgFont_Name->GetString();
-	mLaunchSettings.FontSize = mCfgFont_Size->GetInteger();
+	mLaunchSettings.FontSize = YYCHelper::DpiHelper::GetDpiScaledFontSize(YYCBML_VISITOR->GetCKContext(), static_cast<float>(mCfgFont_Size->GetInteger()));
 	mLaunchSettings.FontColor = 0xFFFFFFFF;	// default color is white
 
 	// ========== try interacte with FontCraft ==========
@@ -136,7 +136,10 @@ void BLinguist::OnExitGame() {
 void BLinguist::GetFontCraftSettingsCallback(std::nullptr_t t, FontCraftSettings settings) {
 	// apply font name and size
 	mLaunchSettings.FontName = settings.mFontName;
-	mLaunchSettings.FontSize = (int)(settings.mFontSize / 2.0f);
+	mLaunchSettings.FontSize = YYCHelper::DpiHelper::GetDpiScaledFontSize(
+		YYCBML_VISITOR->GetCKContext(), 
+		settings.mFontSize * (16.0f / 20.0f)	// 16 is BLinguist font size. 20 is FontCraft font size.
+	);
 	// apply font color
 	mLaunchSettings.FontColor = settings.mFontColor.GetRGBA();
 

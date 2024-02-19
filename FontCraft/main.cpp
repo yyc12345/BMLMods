@@ -43,7 +43,7 @@ void FontCraft::OnLoad() {
 
 	m_core_props[2] = GetConfig()->GetProperty("Core", "FontSize");
 	m_core_props[2]->SetComment("Font size?");
-	m_core_props[2]->SetDefaultFloat(26.0);
+	m_core_props[2]->SetDefaultFloat(20.0);
 
 	m_core_props[3] = GetConfig()->GetProperty("Core", "FontItalic");
 	m_core_props[3]->SetComment("Font italic?");
@@ -69,28 +69,19 @@ void FontCraft::OnLoad() {
 	if (m_core_props[0]->GetBoolean()) {
 		GetLogger()->Info("Drawing bitmap font image...");
 		GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-		bitmapFont = new Bitmap(HW_IMG, HW_IMG, PixelFormat32bppARGB);
+		bitmapFont = new Gdiplus::Bitmap(HW_IMG, HW_IMG, PixelFormat32bppARGB);
 		Graphics g(bitmapFont);
 		g.Clear(Gdiplus::Color(0, 255, 0, 0));
 		g.SetTextRenderingHint(TextRenderingHint::TextRenderingHintAntiAliasGridFit);
 
+		// convert input font name to wchar
 		std::string inputChar;
 		std::wstring inputWChar;
-		int neededLength = 0;
-		bool errorParse = false;
-
 		inputChar = m_core_props[1]->GetString();
-		errorParse = false;
-		if ((neededLength = MultiByteToWideChar(CP_ACP, 0, inputChar.c_str(), -1, NULL, 0)) <= 0)
-			errorParse = true;
-		else {
-			neededLength += 10;
-			inputWChar.resize(neededLength);
-			if (MultiByteToWideChar(CP_ACP, 0, inputChar.c_str(), -1, &inputWChar[0], neededLength) <= 0)
-				errorParse = true;
-		}
-		if (errorParse)
+		if (!YYCHelper::EncodingHelper::CharToWchar(inputChar, inputWChar, CP_ACP)) {
+			// convert failed, use fallback
 			inputWChar = L"Arial";
+		}
 
 		int fs = FontStyle::FontStyleRegular;
 		if (m_core_props[3]->GetBoolean())
@@ -99,7 +90,12 @@ void FontCraft::OnLoad() {
 			fs = fs | FontStyle::FontStyleBold;
 		if (m_core_props[5]->GetBoolean())
 			fs = fs | FontStyle::FontStyleUnderline;
-		Gdiplus::Font ft(inputWChar.c_str(), m_core_props[2]->GetFloat(), (FontStyle)fs, Gdiplus::UnitPixel);
+		Gdiplus::Font ft(
+			inputWChar.c_str(), 
+			static_cast<Gdiplus::REAL>(YYCHelper::DpiHelper::GetDpiScaledFontSize(YYCBML_VISITOR->GetCKContext(), m_core_props[2]->GetFloat())), 
+			(FontStyle)fs, 
+			Gdiplus::UnitPoint
+		);
 
 		VxColor fontColor;
 		if (!YYCHelper::ColorStringParser::ParseColorString(m_core_props[6]->GetString(), fontColor)) {
@@ -116,24 +112,16 @@ void FontCraft::OnLoad() {
 		Gdiplus::SizeF emptySize(0, 0);
 		Gdiplus::SizeF drawPosition(0, 0);
 
-		inputChar.resize(2);
+		inputChar.resize(1);
 		inputChar[0] = '\0';
-		inputChar[1] = '\0';
 		FontData* dataitem = NULL;
 		for (int i = 0; i < HW_COUNT; ++i) {
 			for (int j = 0; j < HW_COUNT; ++j) {
-				errorParse = false;
-				if ((neededLength = MultiByteToWideChar(1252, 0, inputChar.c_str(), -1, NULL, 0)) <= 0)
-					errorParse = true;
-				else {
-					neededLength += 10;
-					inputWChar.resize(neededLength);
-					if (MultiByteToWideChar(1252, 0, inputChar.c_str(), -1, &inputWChar[0], neededLength) <= 0)
-						errorParse = true;
-				}
-
-				if (errorParse)
+				// convert single 1252 char to wchar
+				if (!YYCHelper::EncodingHelper::CharToWchar(inputChar, inputWChar, 1252)) {
+					// convertion failed, use null fallback
 					inputWChar = L"\0";
+				}
 
 				g.MeasureString(inputWChar.c_str(), 1, &ft, emptySize, &sf, &measureRes);
 

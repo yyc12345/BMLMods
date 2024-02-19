@@ -27,6 +27,9 @@
     <ClCompile Include="BMLPatches.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="DpiHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="YYCHelper.h">

@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="BMLPatches.cpp" />
     <ClCompile Include="ColorStringParser.cpp" />
+    <ClCompile Include="DpiHelper.cpp" />
     <ClCompile Include="EncodingHelper.cpp" />
     <ClCompile Include="StringHelper.cpp" />
   </ItemGroup>

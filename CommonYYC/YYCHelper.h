@@ -50,6 +50,17 @@ namespace YYCHelper {
 
 	}
 
+	namespace DpiHelper {
+		/**
+		 * @brief Convert 100% DPI font size to user DPI.
+		 * @detail See https://learn.microsoft.com/zh-cn/windows/win32/learnwin32/dpi-and-device-independent-pixels
+		 * @param ctx[in] CKContext for fetching necessary window HANDLE.
+		 * @param old_font_size[in] The font size input.
+		 * @return A new font size with int type rescaled by Windows DPI settings.
+		*/
+		int GetDpiScaledFontSize(CKContext* ctx, float old_font_size);
+	}
+
 	namespace EncodingHelper {
 
 		bool WcharToChar(const wchar_t* src, std::string& dest, const UINT codepage);
