@@ -2,6 +2,8 @@
 
 The project served for my BML mods.
 
+**There is no any update or bug fix for this project in the future. I feel desperate to Ballance and its community. My dedication and love to Ballance seems to be totally vain. It's time to terminate this project. The last supported BMLPlus version is 0.2.3 and no support to BML. Good luck to you and your Ballance career.**
+
 ## Introduction
 
 ### BallanceOptiFine
